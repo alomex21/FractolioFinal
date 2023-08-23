@@ -89,8 +89,8 @@ class _LoginPageState extends State<LoginPage> {
               content: Text(
                   'Successfully signed in: ${userCredential.user!.email}')),
         );
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MenuPrincipal()),
+        Navigator.of(context).pushReplacementNamed(
+          '/navigator',
         );
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

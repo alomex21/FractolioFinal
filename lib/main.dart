@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fractoliotesting/firebase_options.dart';
+import 'package:fractoliotesting/views/edit_profile.dart';
 import 'package:fractoliotesting/views/login.dart';
 import 'package:fractoliotesting/views/main_menu.dart';
 import 'package:fractoliotesting/views/navigator_logic.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/mainmenu': (context) => const MainMenu(),
         '/profile_screen': (context) => const ProfileScreen(),
         '/navigator': (context) => const MenuPrincipal(),
+        '/edit_profile': (context) => const EditProfile(),
       },
     );
   }

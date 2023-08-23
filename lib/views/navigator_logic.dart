@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fractoliotesting/views/camera_preview_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'login.dart';
 import 'main_menu.dart';
 import 'profile_screen.dart';
 
@@ -19,11 +18,14 @@ class MenuPrincipal extends StatefulWidget {
   }
 }
 
+enum BodyPage { homePage, detailsPage, profileScreen }
+
 class _MenuPrincipalState extends State<MenuPrincipal> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final screens = const [
-    MainMenu(),
-    ProfileScreen(),
+  //final screens = const
+  final List<Widget> screens = [
+    const MainMenu(),
+    const ProfileScreen(),
   ];
   int currentIndex = 0;
   @override
@@ -57,10 +59,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
   void _logout() async {
     await _auth.signOut();
     if (!context.mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const LoginPage(),
-      ),
+    Navigator.of(context).pushReplacementNamed(
+      '/',
     );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
