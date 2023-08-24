@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
           BotonPerfil(
             text: "Change Password",
             onTap: () {
-              Navigator.pushNamed(context, '/edit_profile');
+              Navigator.pushNamed(context, '/change_password');
             },
           ),
           const BotonPerfil(text: "Edit Profile"),

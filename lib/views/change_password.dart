@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/views/login.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -13,7 +14,37 @@ class _EditProfileState extends State<EditProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String _newpassword = '', _oldpassword = '', _finalpassword = '';
+  var newPassword = '';
+
+  final newPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    newPasswordController.dispose();
+    super.dispose();
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+  changePassword() async {
+    try {
+      await currentUser!.updatePassword(newPassword);
+      FirebaseAuth.instance.signOut();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginView(),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.black26,
+          content: Text('Password Changed. Log in again.'),
+        ),
+      );
+    } catch (error) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,33 +97,34 @@ class _EditProfileState extends State<EditProfile> {
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
-                            labelText: 'Enter old Password'),
-                        obscureText: true,
-                        onSaved: (String? value) => _oldpassword = value!,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
                             labelText: 'Enter new Password'),
                         obscureText: true,
-                        onSaved: (String? value) => _newpassword,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                            labelText: 'Confirm your Password'),
-                        obscureText: true,
-                        validator: (String? value) {
-                          if (_newpassword != _finalpassword) {
-                            return 'Please enter the same password';
+                        controller: newPasswordController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter password';
                           }
                           return null;
                         },
-                        onSaved: (String? value) => _finalpassword,
                       ),
                     ],
                   ),
                 ),
               ),
             ),
+            Container(
+              child: TextButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      newPassword = newPasswordController.text;
+                    });
+                    changePassword();
+                  }
+                },
+                child: const Text('Change Password'),
+              ),
+            )
           ],
         ),
       ),
