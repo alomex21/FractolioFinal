@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/dialogs/error_dialog.dart';
+import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
 import 'package:fractoliotesting/views/login.dart';
+import 'package:fractoliotesting/widgets/widgets.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -30,20 +33,26 @@ class _EditProfileState extends State<EditProfile> {
     try {
       await currentUser!.updatePassword(newPassword);
       FirebaseAuth.instance.signOut();
-
-      Navigator.pushReplacement(
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginView(),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.black26,
+            content: Text('Password Changed. Log in again.'),
+          ),
+        );
+      }
+    } on GenericAuthException {
+      await showErrorDialog(
         context,
-        MaterialPageRoute(
-          builder: (context) => const LoginView(),
-        ),
+        'Error While changing password',
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.black26,
-          content: Text('Password Changed. Log in again.'),
-        ),
-      );
-    } catch (error) {}
+    }
   }
 
   @override
@@ -66,17 +75,21 @@ class _EditProfileState extends State<EditProfile> {
           mainAxisSize: MainAxisSize.max,
           children: [
             const Text(
-              'Reset Password',
+              'About to Reset Password',
               style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 24,
                   fontStyle: FontStyle.normal),
             ),
+            const Text('Remember to correctly set a good password'),
+            const Divider(
+              height: 25,
+              thickness: 5,
+            ),
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              //padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               alignment: AlignmentDirectional.center,
               width: double.infinity,
-              height: 200,
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                 child: Container(
@@ -112,18 +125,17 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
             ),
-            Container(
-              child: TextButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      newPassword = newPasswordController.text;
-                    });
-                    changePassword();
-                  }
-                },
-                child: const Text('Change Password'),
-              ),
+            const Divider(height: 25, thickness: 5),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    newPassword = newPasswordController.text;
+                  });
+                  changePassword();
+                }
+              },
+              child: const BotonPerfil(text: 'Change Password'),
             )
           ],
         ),
