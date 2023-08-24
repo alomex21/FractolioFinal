@@ -38,12 +38,12 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           BotonPerfil(
-            text: "Edit Profile",
+            text: "Change Password",
             onTap: () {
               Navigator.pushNamed(context, '/edit_profile');
             },
           ),
-          const BotonPerfil(text: "Change Password"),
+          const BotonPerfil(text: "Edit Profile"),
         ],
       ),
     );

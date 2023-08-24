@@ -13,6 +13,7 @@ class LoginPage extends StatefulWidget {
   }
 }
 
+// TODO agregar dispose y controllers a los TextFormfields
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
