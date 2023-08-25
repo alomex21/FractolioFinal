@@ -49,7 +49,14 @@ class HomePage extends StatelessWidget {
             }
 
           default:
-            return const CircularProgressIndicator();
+            return const Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                CircularProgressIndicator(),
+              ],
+            ); //const CircularProgressIndicator();
         }
       },
     );
