@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fractoliotesting/constant/routes.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:fractoliotesting/views/change_password.dart';
+import 'package:fractoliotesting/views/forgot_password.dart';
 import 'package:fractoliotesting/views/login.dart';
 import 'package:fractoliotesting/views/navigator_logic.dart';
 import 'package:fractoliotesting/views/profile_screen.dart';
@@ -22,6 +23,7 @@ void main() {
         navigator: (context) => const MenuPrincipal(),
         editProfle: (context) => const ProfileScreen(),
         changePassword: (context) => const EditProfile(),
+        forgotPassword: (context) => const ForgotPasswordView(),
       },
     ),
   );

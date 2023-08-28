@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
 class LoginView extends StatefulWidget {
@@ -62,11 +59,17 @@ class _LoginViewState extends State<LoginView> {
               mounted: mounted,
             ),
             TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(registerRoute, (route) => true);
+              },
+              child: const Text('Not registered yet? Register here!'),
+            ),
+            TextButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(registerRoute, (route) => true);
+                  Navigator.of(context).pushNamed(forgotPassword);
                 },
-                child: const Text('Not registered yet? Register here!'))
+                child: const Text('I forgot my password')),
           ],
         ),
       ),
