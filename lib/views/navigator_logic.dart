@@ -1,6 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fractoliotesting/constant/routes.dart';
+import 'package:fractoliotesting/dialogs/logout_dialog.dart';
+import 'package:fractoliotesting/enums/menu_action.dart';
+import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:fractoliotesting/views/camera_preview_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'main_menu.dart';
@@ -34,10 +38,33 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
       appBar: AppBar(
         title: const Text('Main Menu'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
-          ),
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  final shouldlogout = await showLogOutDialog(context);
+                  if (shouldlogout) {
+                    await AuthService.firebase().logOut();
+                    if (mounted) {
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil(loginRoute, (_) => false);
+                    }
+                  }
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout,
+                  child: Text('Log out'),
+                )
+              ];
+            },
+          )
+          // IconButton(
+          //   icon: const Icon(Icons.logout),
+          //   onPressed: _logout,
+          // ),
         ],
       ),
       body: screens[currentIndex],
@@ -56,18 +83,18 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
     );
   }
 
-  void _logout() async {
-    await _auth.signOut();
-    if (!context.mounted) return;
-    Navigator.of(context).pushReplacementNamed(
-      '/',
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Successfully signed out!'),
-      ),
-    );
-  }
+  // void _logout() async {
+  //   await _auth.signOut();
+  //   if (!context.mounted) return;
+  //   Navigator.of(context).pushReplacementNamed(
+  //     '/',
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Successfully signed out!'),
+  //     ),
+  //   );
+  // }
 
   Future<void> _openCamera() async {
     final status = await Permission.camera.request();

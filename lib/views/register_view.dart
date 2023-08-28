@@ -69,10 +69,11 @@ class _RegisterViewState extends State<RegisterView> {
               final email = _email.text;
               final password = _password.text;
               final fullname = _username.text;
+
+              await AuthService.firebase()
+                  .createUser(email: email, password: password);
+              AuthService.firebase().sendEmailVerification();
               try {
-                await AuthService.firebase()
-                    .createUser(email: email, password: password);
-                AuthService.firebase().sendEmailVerification();
                 model.User user = model.User(
                     uid: FirebaseAuth.instance.currentUser!.uid,
                     fullName: fullname,
@@ -87,25 +88,10 @@ class _RegisterViewState extends State<RegisterView> {
                 if (mounted) {
                   Navigator.of(context).pushNamed(verifyEmailRoute);
                 }
-              } on WeakPasswordAuthException {
-                await showErrorDialog(
-                  context,
-                  'Weak Password',
-                );
-              } on EmailAlreadyInUseAuthException {
-                await showErrorDialog(
-                  context,
-                  'Email already in use',
-                );
-              } on InvalidEmailAuthException {
-                await showErrorDialog(
-                  context,
-                  'Invalid Email',
-                );
               } on GenericAuthException {
                 await showErrorDialog(
                   context,
-                  'Failed to register',
+                  'Error while uploading data to Firestore',
                 );
               }
             },

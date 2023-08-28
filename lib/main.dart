@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/constant/routes.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
+import 'package:fractoliotesting/views/add_product.dart';
 import 'package:fractoliotesting/views/change_password.dart';
 import 'package:fractoliotesting/views/forgot_password.dart';
 import 'package:fractoliotesting/views/login.dart';
@@ -24,6 +25,7 @@ void main() {
         editProfle: (context) => const ProfileScreen(),
         changePassword: (context) => const EditProfile(),
         forgotPassword: (context) => const ForgotPasswordView(),
+        addProduct: (context) => const ProductInfoForm()
       },
     ),
   );
@@ -51,13 +53,15 @@ class HomePage extends StatelessWidget {
             }
 
           default:
-            return const Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                CircularProgressIndicator(),
-              ],
+            return const Scaffold(
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  CircularProgressIndicator(),
+                ],
+              ),
             ); //const CircularProgressIndicator();
         }
       },
