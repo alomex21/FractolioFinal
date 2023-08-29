@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/views/add_product.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -20,7 +19,7 @@ class _MainMenuState extends State<MainMenu> {
     return Scaffold(
       body: Column(
         children: [
-          Text('test'),
+          const Text('test'),
           TextButton(
             onPressed: () {
               Navigator.of(context).pushNamed(addProduct);

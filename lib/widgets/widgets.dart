@@ -113,20 +113,26 @@ class LoginState extends StatelessWidget {
             }
           }
         } on UserNotFoundAuthException {
-          await showErrorDialog(
-            context,
-            "User not found",
-          );
+          if (mounted) {
+            await showErrorDialog(
+              context,
+              "User not found",
+            );
+          }
         } on WrongPasswordAuthException {
-          await showErrorDialog(
-            context,
-            "Wrong credentials",
-          );
+          if (mounted) {
+            await showErrorDialog(
+              context,
+              "Wrong credentials",
+            );
+          }
         } on GenericAuthException {
-          await showErrorDialog(
-            context,
-            'Authentication Error',
-          );
+          if (mounted) {
+            await showErrorDialog(
+              context,
+              'Authentication Error',
+            );
+          }
         }
       },
       child: const Text('Login'),

@@ -89,10 +89,12 @@ class _RegisterViewState extends State<RegisterView> {
                   Navigator.of(context).pushNamed(verifyEmailRoute);
                 }
               } on GenericAuthException {
-                await showErrorDialog(
-                  context,
-                  'Error while uploading data to Firestore',
-                );
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Error while uploading data to Firestore',
+                  );
+                }
               }
             },
             child: const Text('Register'),

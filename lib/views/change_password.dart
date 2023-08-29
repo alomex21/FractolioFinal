@@ -48,10 +48,12 @@ class _EditProfileState extends State<EditProfile> {
         );
       }
     } on GenericAuthException {
-      await showErrorDialog(
-        context,
-        'Error While changing password',
-      );
+      if (mounted) {
+        await showErrorDialog(
+          context,
+          'Error While changing password',
+        );
+      }
     }
   }
 

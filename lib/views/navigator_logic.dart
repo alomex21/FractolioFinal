@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fractoliotesting/constant/routes.dart';
 import 'package:fractoliotesting/dialogs/logout_dialog.dart';
 import 'package:fractoliotesting/enums/menu_action.dart';
@@ -25,7 +25,7 @@ class MenuPrincipal extends StatefulWidget {
 enum BodyPage { homePage, detailsPage, profileScreen }
 
 class _MenuPrincipalState extends State<MenuPrincipal> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
   //final screens = const
   final List<Widget> screens = [
     const MainMenu(),
