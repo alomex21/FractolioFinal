@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-class User {
+class FirebaseUser {
   final String uid;
   final String fullName;
   final String email;
   final String joinedDate;
   final String? dietaryPreferences;
 
-  const User(
+  const FirebaseUser(
       {required this.uid,
       required this.fullName,
       required this.email,
@@ -24,9 +24,9 @@ class User {
         'dietaryPreferences': dietaryPreferences,
       };
 
-  static User fromSnap(DocumentSnapshot snap) {
+  static FirebaseUser fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
-    return User(
+    return FirebaseUser(
       fullName: snapshot['username'],
       email: snapshot['email'],
       uid: snapshot['uid'],

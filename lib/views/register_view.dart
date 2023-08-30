@@ -1,11 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
-import 'package:fractoliotesting/models/user.dart' as model;
+import 'package:fractoliotesting/widgets/widgets.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -64,47 +58,12 @@ class _RegisterViewState extends State<RegisterView> {
             enableSuggestions: false,
             autocorrect: false,
           ),
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              final fullname = _username.text;
-
-              await AuthService.firebase()
-                  .createUser(email: email, password: password);
-              AuthService.firebase().sendEmailVerification();
-              try {
-                model.User user = model.User(
-                    uid: FirebaseAuth.instance.currentUser!.uid,
-                    fullName: fullname,
-                    email: email,
-                    joinedDate: DateTime.now().toString(),
-                    dietaryPreferences: null);
-
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .set(user.toJson());
-                if (mounted) {
-                  Navigator.of(context).pushNamed(verifyEmailRoute);
-                }
-              } on GenericAuthException {
-                if (mounted) {
-                  await showErrorDialog(
-                    context,
-                    'Error while uploading data to Firestore',
-                  );
-                }
-              }
-            },
-            child: const Text('Register'),
+          RegisterState(
+            email: _email,
+            password: _password,
+            username: _username,
+            mounted: mounted,
           ),
-          TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(loginRoute, (route) => false);
-              },
-              child: const Text('Already registered? Login Here!'))
         ],
       ),
     );

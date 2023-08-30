@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/views/change_password.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    const Text("Username"),
+                    FullnameWidget(),
                     const Text('emailaddress'),
                     Center(
                       child: ElevatedButton(
@@ -42,7 +43,9 @@ class ProfileScreen extends StatelessWidget {
           BotonPerfil(
             text: "Change Password",
             onTap: () {
-              Navigator.pushNamed(context, '/change_password');
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => const EditProfile())));
+              //Navigator.pushNamed(context, '/change_password');
             },
           ),
           const BotonPerfil(text: "Edit Profile"),
