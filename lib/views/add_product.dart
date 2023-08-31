@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fractoliotesting/dialogs/generic_dialog.dart';
 //import 'package:image_picker/image_picker.dart';
 
 class ProductInfoForm extends StatefulWidget {
@@ -37,6 +38,13 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _allergenController.dispose();
     _nutritionalPropertyController.dispose();
     _nutritionalValueController.dispose();
+  }
+
+  _validateNutritionalValues(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -119,8 +127,9 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
       itemCount: _nutritionalValues.keys.length,
       itemBuilder: (context, index) {
         String key = _nutritionalValues.keys.elementAt(index);
+        int keyLength = index + 1;
         return ListTile(
-          title: Text('$key: ${_nutritionalValues[key]}'),
+          title: Text('$keyLength. $key: ${_nutritionalValues[key]}'),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
@@ -150,10 +159,26 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
           icon: const Icon(Icons.add),
           onPressed: () {
             setState(() {
-              _nutritionalValues[_nutritionalPropertyController.text] =
-                  _nutritionalValueController.text;
-              _nutritionalPropertyController.clear();
-              _nutritionalValueController.clear();
+              bool isvaluetrue = _validateNutritionalValues(
+                  //chequear valor del controller
+                  _nutritionalValueController.text);
+              //https://dart.dev/language/collections#maps
+              //Adds a nutritional property(calories)
+              if (isvaluetrue) {
+                _nutritionalValues[_nutritionalPropertyController.text] =
+                    _nutritionalValueController.text;
+                //Clears Controllers
+                _nutritionalPropertyController.clear();
+                _nutritionalValueController.clear();
+              } else {
+                showGenericDialog(
+                    context: context,
+                    title: 'Error',
+                    content: 'A value is needed',
+                    optionBuilder: () => {
+                          "OK": null,
+                        });
+              }
             });
           },
         ),
