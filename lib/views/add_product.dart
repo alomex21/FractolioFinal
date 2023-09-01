@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fractoliotesting/dialogs/generic_dialog.dart';
+import 'package:fractoliotesting/dialogs/error_dialog.dart';
 //import 'package:image_picker/image_picker.dart';
 
 class ProductInfoForm extends StatefulWidget {
@@ -40,16 +40,19 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _nutritionalValueController.dispose();
   }
 
-  _validateNutritionalValues(String value) {
+/*   _validateNutritionalValues(String value) {
     if (value.isEmpty) {
       return false;
     }
     return true;
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Product'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -66,6 +69,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                 _addAllergenRow(),
                 _buildNutritionalListView(),
                 _addNutritionalRow(),
+                const Divider(),
                 _submitButton(),
               ],
             ),
@@ -108,8 +112,14 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         Expanded(
           child: _buildTextField(_allergenController, 'Enter allergen...'),
         ),
-        IconButton(
-          icon: const Icon(Icons.add),
+        FloatingActionButton(
+          backgroundColor: Colors.orange,
+          heroTag: "fab2",
+          elevation: 3,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
           onPressed: () {
             setState(() {
               _allergens.add(_allergenController.text);
@@ -155,31 +165,23 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
           child: _buildTextField(
               _nutritionalValueController, 'Enter nutritional value...'),
         ),
-        IconButton(
-          icon: const Icon(Icons.add),
+        FloatingActionButton(
+          backgroundColor: Colors.orange,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
           onPressed: () {
-            setState(() {
-              bool isvaluetrue = _validateNutritionalValues(
-                  //chequear valor del controller
-                  _nutritionalValueController.text);
-              //https://dart.dev/language/collections#maps
-              //Adds a nutritional property(calories)
-              if (isvaluetrue) {
+            setState(
+              () {
+                //https://dart.dev/language/collections#maps
+                //Adds a nutritional property(calories)
                 _nutritionalValues[_nutritionalPropertyController.text] =
                     _nutritionalValueController.text;
-                //Clears Controllers
                 _nutritionalPropertyController.clear();
                 _nutritionalValueController.clear();
-              } else {
-                showGenericDialog(
-                    context: context,
-                    title: 'Error',
-                    content: 'A value is needed',
-                    optionBuilder: () => {
-                          "OK": null,
-                        });
-              }
-            });
+              },
+            );
           },
         ),
       ],
@@ -193,8 +195,52 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     );
   }
 
+/*   void _submitForm() async {
+    if (_formkey.currentState!.validate()) {
+      CollectionReference products =
+          FirebaseFirestore.instance.collection('Products');
+      await products.add({
+        'product_name': _productNameController.text,
+        'qr_code': _qrCodeController.text,
+        'description': _descriptionController.text,
+        'image_url': _imageURLController.text,
+        'allergens': _allergens,
+        'nutritional_values': _nutritionalValues,
+      });
+
+      // Clear the fields
+      _productNameController.clear();
+      _qrCodeController.clear();
+      _descriptionController.clear();
+      _imageURLController.clear();
+      _allergenController.clear();
+      _nutritionalPropertyController.clear();
+      _nutritionalValueController.clear();
+
+      // Clear the allergens and nutritional values lists
+      setState(() {
+        _allergens.clear();
+        _nutritionalValues.clear();
+      });
+    }
+  }
+} */
+
   void _submitForm() async {
     if (_formkey.currentState!.validate()) {
+      // Check if any of the fields or lists are empty
+      if (_productNameController.text.isEmpty ||
+          //_qrCodeController.text.isEmpty ||
+          _descriptionController.text.isEmpty ||
+          //_imageURLController.text.isEmpty ||
+          _allergens.isEmpty ||
+          _nutritionalValues.isEmpty) {
+        // Display an error message, you can use Flutter's Snackbar or Dialog for this
+        // Example using a Snackbar
+        showErrorDialog(context, "All fields have to be filled!");
+        return; // Exit the function without submitting the data
+      }
+
       CollectionReference products =
           FirebaseFirestore.instance.collection('Products');
       await products.add({

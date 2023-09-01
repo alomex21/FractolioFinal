@@ -159,7 +159,7 @@ class FullnameWidget extends StatelessWidget {
       Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
       return data?['username'] as String?;
     } catch (error) {
-      print("Error fetching full name: $error");
+      //print("Error fetching full name: $error");
       throw Exception('Failed to fetch full name');
     }
   }
