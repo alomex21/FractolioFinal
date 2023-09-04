@@ -6,6 +6,7 @@ import 'package:fractoliotesting/enums/menu_action.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:fractoliotesting/views/camera_preview_screen.dart';
 import 'package:fractoliotesting/views/login.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'main_menu.dart';
 import 'profile_screen.dart';
@@ -78,13 +79,19 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
     final status = await Permission.camera.request();
 
     if (status.isGranted) {
-      final cameras = await availableCameras();
-      final firstCamera = cameras.first;
+      //final cameras = await availableCameras();
+      //final firstCamera = cameras.first;
       if (!context.mounted) return;
-      Navigator.of(context).push(
+      /* Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => CameraPreviewScreen(camera: firstCamera),
+          builder: (context) => const CameraControllerQR(),
+
+          //CameraPreviewScreen(camera: firstCamera)
         ),
+      ); */
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CameraControllerQR()),
       );
     } else {
       if (!context.mounted) return;

@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.0.2
+  mobile_scanner: ^3.4.1
   permission_handler: ^10.2.0
   string_capitalize: ^0.0.10
 

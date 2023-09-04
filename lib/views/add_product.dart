@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
+import 'package:fractoliotesting/models/addproduct.dart' as product;
 //import 'package:image_picker/image_picker.dart';
 
 class ProductInfoForm extends StatefulWidget {
@@ -241,16 +242,38 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         return; // Exit the function without submitting the data
       }
 
+      product.AddProduct productfinal = product.AddProduct(
+          _productNameController.text,
+          _qrCodeController.text,
+          _descriptionController.text,
+          _imageURLController.text,
+          _allergens,
+          _nutritionalValues);
+
       CollectionReference products =
           FirebaseFirestore.instance.collection('Products');
+      await products.add(productfinal.toJson()).then(
+        (value) {
+          String idref = value.id;
+          products.doc(idref).update({"qr_code": idref});
+        },
+      );
+
+      //final id = products.doc().id;
+
+      /* final key = products.doc();
       await products.add({
         'product_name': _productNameController.text,
-        'qr_code': _qrCodeController.text,
+        'qr_code': products.id,
         'description': _descriptionController.text,
         'image_url': _imageURLController.text,
         'allergens': _allergens,
         'nutritional_values': _nutritionalValues,
-      });
+      }).then((value) {
+        String idref = value.id;
+        print(idref);
+      }); */
+      //TODO: qr_code ingresar valor de su documento y de ahi crear imagen de qr y almacenar?
 
       // Clear the fields
       _productNameController.clear();
