@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AddProduct {
   final String productName;
   final String qrCode;
