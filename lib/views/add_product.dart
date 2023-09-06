@@ -1,9 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/models/addproduct.dart' as product;
-//import 'package:image_picker/image_picker.dart';
 
 class ProductInfoForm extends StatefulWidget {
   const ProductInfoForm({super.key});
@@ -27,8 +25,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   final List<String> _allergens = [];
   final Map<String, String> _nutritionalValues = {};
 
-  File? imageFile;
-
   @override
   void dispose() {
     super.dispose();
@@ -41,13 +37,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _nutritionalValueController.dispose();
   }
 
-/*   _validateNutritionalValues(String value) {
-    if (value.isEmpty) {
-      return false;
-    }
-    return true;
-  } */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,17 +44,36 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         title: const Text('Add Product'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10.0),
         child: Form(
           key: _formkey,
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
+                const Divider(),
                 _buildTextField(
-                    _productNameController, 'Enter product name...'),
-                _buildTextField(_qrCodeController, 'Enter QRCode...'),
-                _buildTextField(_descriptionController, 'Enter description...'),
-                _buildTextField(_imageURLController, 'Enter imageURL...'),
+                  _productNameController,
+                  'Enter product name...',
+                  textAlign: TextAlign.center,
+                ),
+                _buildTextField(
+                  _qrCodeController,
+                  'Enter QRCode...',
+                ),
+                _buildTextField(
+                  _descriptionController,
+                  'Enter description...',
+                  minLines: 1,
+                  showCounter: true,
+                  maxLength: 500,
+                ),
+                _buildTextField(
+                  _imageURLController,
+                  'Enter imageURL...',
+                ),
                 _buildAllergenListView(),
                 _addAllergenRow(),
                 _buildNutritionalListView(),
@@ -80,10 +88,31 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(hintText: hintText),
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hintText, {
+    int? minLines,
+    int? maxLength,
+    bool showCounter = true,
+    TextAlign textAlign = TextAlign.left,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        maxLines: null,
+        minLines: minLines ?? 1,
+        maxLength: maxLength,
+        controller: controller,
+        textAlign: textAlign,
+        decoration: InputDecoration(
+          hintText: hintText,
+          labelText: hintText,
+          counterText: showCounter ? null : '',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
     );
   }
 
@@ -111,9 +140,10 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     return Row(
       children: [
         Expanded(
-          child: _buildTextField(_allergenController, 'Enter allergen...'),
+          child: _buildTextField(_allergenController, 'Enter allergen...',
+              textAlign: TextAlign.center),
         ),
-        FloatingActionButton(
+        FloatingActionButton.small(
           backgroundColor: Colors.orange,
           heroTag: "fab2",
           elevation: 3,
@@ -122,10 +152,14 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
             color: Colors.white,
           ),
           onPressed: () {
-            setState(() {
-              _allergens.add(_allergenController.text);
-              _allergenController.clear();
-            });
+            if (_allergenController.text.trim().isNotEmpty) {
+              setState(() {
+                _allergens.add(_allergenController.text);
+                _allergenController.clear();
+              });
+            } else {
+              showErrorDialog(context, "Add Allergens first");
+            }
           },
         ),
       ],
@@ -158,31 +192,37 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     return Row(
       children: [
         Expanded(
-          child: _buildTextField(_nutritionalPropertyController,
-              'Enter nutritional value property...'),
+          child: _buildTextField(
+              _nutritionalPropertyController, 'Nutritional property'),
         ),
         const SizedBox(width: 10),
         Expanded(
-          child: _buildTextField(
-              _nutritionalValueController, 'Enter nutritional value...'),
+          child:
+              _buildTextField(_nutritionalValueController, 'Nutritional value'),
         ),
-        FloatingActionButton(
+        FloatingActionButton.small(
           backgroundColor: Colors.orange,
           child: const Icon(
             Icons.add,
             color: Colors.white,
           ),
           onPressed: () {
-            setState(
-              () {
-                //https://dart.dev/language/collections#maps
-                //Adds a nutritional property(calories)
-                _nutritionalValues[_nutritionalPropertyController.text] =
-                    _nutritionalValueController.text;
-                _nutritionalPropertyController.clear();
-                _nutritionalValueController.clear();
-              },
-            );
+            if (_nutritionalPropertyController.text.trim().isNotEmpty &&
+                _nutritionalValueController.text.trim().isNotEmpty) {
+              setState(
+                () {
+                  //https://dart.dev/language/collections#maps
+                  //Adds a nutritional property(calories)
+                  _nutritionalValues[_nutritionalPropertyController.text] =
+                      _nutritionalValueController.text;
+                  _nutritionalPropertyController.clear();
+                  _nutritionalValueController.clear();
+                },
+              );
+            } else {
+              showErrorDialog(context,
+                  "You need atleast one nutritional property and value");
+            }
           },
         ),
       ],
@@ -195,37 +235,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
       child: const Text('Submit'),
     );
   }
-
-/*   void _submitForm() async {
-    if (_formkey.currentState!.validate()) {
-      CollectionReference products =
-          FirebaseFirestore.instance.collection('Products');
-      await products.add({
-        'product_name': _productNameController.text,
-        'qr_code': _qrCodeController.text,
-        'description': _descriptionController.text,
-        'image_url': _imageURLController.text,
-        'allergens': _allergens,
-        'nutritional_values': _nutritionalValues,
-      });
-
-      // Clear the fields
-      _productNameController.clear();
-      _qrCodeController.clear();
-      _descriptionController.clear();
-      _imageURLController.clear();
-      _allergenController.clear();
-      _nutritionalPropertyController.clear();
-      _nutritionalValueController.clear();
-
-      // Clear the allergens and nutritional values lists
-      setState(() {
-        _allergens.clear();
-        _nutritionalValues.clear();
-      });
-    }
-  }
-} */
 
   void _submitForm() async {
     if (_formkey.currentState!.validate()) {
@@ -255,24 +264,23 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
       await products.add(productfinal.toJson()).then(
         (value) {
           String idref = value.id;
-          products.doc(idref).update({"qr_code": idref});
+          products.doc(idref).update(
+            {
+              "qr_code": idref,
+            },
+          ).whenComplete(
+            () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Product Uploaded',
+                ),
+              ),
+            ),
+          );
         },
+        onError: (e) => showErrorDialog(context, "Firebase Error!"),
       );
 
-      //final id = products.doc().id;
-
-      /* final key = products.doc();
-      await products.add({
-        'product_name': _productNameController.text,
-        'qr_code': products.id,
-        'description': _descriptionController.text,
-        'image_url': _imageURLController.text,
-        'allergens': _allergens,
-        'nutritional_values': _nutritionalValues,
-      }).then((value) {
-        String idref = value.id;
-        print(idref);
-      }); */
       //TODO: qr_code ingresar valor de su documento y de ahi crear imagen de qr y almacenar?
 
       // Clear the fields
