@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/models/addproduct.dart' as product;
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ProductInfoForm extends StatefulWidget {
   const ProductInfoForm({super.key});
@@ -104,6 +105,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         maxLength: maxLength,
         controller: controller,
         textAlign: textAlign,
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           hintText: hintText,
           labelText: hintText,
@@ -245,8 +247,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
           //_imageURLController.text.isEmpty ||
           _allergens.isEmpty ||
           _nutritionalValues.isEmpty) {
-        // Display an error message, you can use Flutter's Snackbar or Dialog for this
-        // Example using a Snackbar
         showErrorDialog(context, "All fields have to be filled!");
         return; // Exit the function without submitting the data
       }
@@ -261,42 +261,58 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
 
       CollectionReference products =
           FirebaseFirestore.instance.collection('Products');
-      await products.add(productfinal.toJson()).then(
-        (value) {
-          String idref = value.id;
-          products.doc(idref).update(
-            {
-              "qr_code": idref,
+      final connectivity = await (Connectivity().checkConnectivity());
+      if (connectivity != ConnectivityResult.none) {
+        try {
+          await products.add(productfinal.toJson()).then(
+            (value) {
+              String idref = value.id;
+              products
+                  .doc(idref)
+                  .update(
+                    {
+                      "qr_code": idref,
+                    },
+                  )
+                  .whenComplete(
+                    () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Product Uploaded',
+                        ),
+                      ),
+                    ),
+                  )
+                  .then((value) {
+                    // Clear the fields
+                    _productNameController.clear();
+                    _qrCodeController.clear();
+                    _descriptionController.clear();
+                    _imageURLController.clear();
+                    _allergenController.clear();
+                    _nutritionalPropertyController.clear();
+                    _nutritionalValueController.clear();
+                    setState(() {
+                      _allergens.clear();
+                      _nutritionalValues.clear();
+                    });
+                  });
             },
-          ).whenComplete(
-            () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Product Uploaded',
-                ),
-              ),
-            ),
+            onError: (e) => showErrorDialog(
+                context, 'Failed with error "${e.code}": "${e.message}"'),
           );
-        },
-        onError: (e) => showErrorDialog(context, "Firebase Error!"),
-      );
+        } on FirebaseException catch (e) {
+          print('Failed with error "${e.code}": "${e.message}"');
+        }
+      } else {
+        if (mounted) {
+          showErrorDialog(context, 'No internet access!');
+        }
+      }
 
       //TODO: qr_code ingresar valor de su documento y de ahi crear imagen de qr y almacenar?
 
-      // Clear the fields
-      _productNameController.clear();
-      _qrCodeController.clear();
-      _descriptionController.clear();
-      _imageURLController.clear();
-      _allergenController.clear();
-      _nutritionalPropertyController.clear();
-      _nutritionalValueController.clear();
-
       // Clear the allergens and nutritional values lists
-      setState(() {
-        _allergens.clear();
-        _nutritionalValues.clear();
-      });
     }
   }
 }

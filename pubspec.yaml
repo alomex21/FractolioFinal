@@ -9,6 +9,7 @@ environment:
 dependencies:
   camera: ^0.10.5
   cloud_firestore: ^4.8.5
+  connectivity_plus: ^4.0.2
   firebase_auth: ^4.5.0
   firebase_core: ^2.11.0
 
