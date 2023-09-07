@@ -4,6 +4,7 @@ import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/models/addproduct.dart' as product;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fractoliotesting/widgets/addproduct.dart';
+import 'package:fractoliotesting/widgets/controllers/allergen_widget.dart';
 
 class ProductInfoForm extends StatefulWidget {
   const ProductInfoForm({super.key});
@@ -73,8 +74,23 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                 BuildTextField(
                     controller: _imageURLController,
                     hintText: 'Enter imageURL...'),
-                _buildAllergenListView(),
-                _addAllergenRow(),
+                AllergenListView(
+                    allergens: _allergens,
+                    onRemoveAllergen: (index) {
+                      setState(() {
+                        _allergens.removeAt(index);
+                      });
+                    }),
+                //_buildAllergenListView(),
+                AllergenRow(
+                    controller: _allergenController,
+                    onAddAllergen: (allergen) {
+                      setState(() {
+                        _allergens.add(allergen);
+                        _allergenController.clear();
+                      });
+                    }),
+                //_addAllergenRow(),
                 _buildNutritionalListView(),
                 _addNutritionalRow(),
                 const Divider(),

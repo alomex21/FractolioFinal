@@ -16,9 +16,11 @@ dependencies:
   firebase_storage: ^11.2.6
   flutter:
     sdk: flutter
+  flutter_riverpod: ^1.0.1
   image_picker: ^1.0.2
   mobile_scanner: ^3.4.1
   permission_handler: ^10.2.0
+  riverpod: ^1.0.1
   string_capitalize: ^0.0.10
 
 dev_dependencies:
