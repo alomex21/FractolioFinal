@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/models/addproduct.dart' as product;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fractoliotesting/widgets/addproduct.dart';
 
 class ProductInfoForm extends StatefulWidget {
   const ProductInfoForm({super.key});
@@ -55,26 +56,23 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 const Divider(),
-                _buildTextField(
-                  _productNameController,
-                  'Enter product name...',
+                BuildTextField(
+                  controller: _productNameController,
+                  hintText: 'Enter product name...',
                   textAlign: TextAlign.center,
                 ),
-                _buildTextField(
-                  _qrCodeController,
-                  'Enter QRCode...',
-                ),
-                _buildTextField(
-                  _descriptionController,
-                  'Enter description...',
+                BuildTextField(
+                    controller: _qrCodeController, hintText: 'Enter QRCode'),
+                BuildTextField(
+                  controller: _descriptionController,
+                  hintText: 'Enter description',
                   minLines: 1,
                   showCounter: true,
                   maxLength: 500,
                 ),
-                _buildTextField(
-                  _imageURLController,
-                  'Enter imageURL...',
-                ),
+                BuildTextField(
+                    controller: _imageURLController,
+                    hintText: 'Enter imageURL...'),
                 _buildAllergenListView(),
                 _addAllergenRow(),
                 _buildNutritionalListView(),
@@ -89,7 +87,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     );
   }
 
-  Widget _buildTextField(
+/*   Widget _buildTextField(
     TextEditingController controller,
     String hintText, {
     int? minLines,
@@ -116,7 +114,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildAllergenListView() {
     return ListView.builder(
@@ -142,7 +140,9 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     return Row(
       children: [
         Expanded(
-          child: _buildTextField(_allergenController, 'Enter allergen...',
+          child: BuildTextField(
+              controller: _allergenController,
+              hintText: 'Enter allergen...',
               textAlign: TextAlign.center),
         ),
         FloatingActionButton.small(
@@ -194,13 +194,15 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     return Row(
       children: [
         Expanded(
-          child: _buildTextField(
-              _nutritionalPropertyController, 'Nutritional property'),
+          child: BuildTextField(
+              controller: _nutritionalPropertyController,
+              hintText: 'Nutritional property'),
         ),
         const SizedBox(width: 10),
         Expanded(
-          child:
-              _buildTextField(_nutritionalValueController, 'Nutritional value'),
+          child: BuildTextField(
+              controller: _nutritionalValueController,
+              hintText: 'Nutritional value'),
         ),
         FloatingActionButton.small(
           backgroundColor: Colors.orange,
@@ -289,9 +291,9 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                     _qrCodeController.clear();
                     _descriptionController.clear();
                     _imageURLController.clear();
-                    _allergenController.clear();
-                    _nutritionalPropertyController.clear();
-                    _nutritionalValueController.clear();
+                    //_allergenController.clear();
+                    //_nutritionalPropertyController.clear();
+                    //_nutritionalValueController.clear();
                     setState(() {
                       _allergens.clear();
                       _nutritionalValues.clear();
