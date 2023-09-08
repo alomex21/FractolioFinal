@@ -217,8 +217,12 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         const SizedBox(width: 10),
         Expanded(
           child: BuildTextField(
-              controller: _nutritionalValueController,
-              hintText: 'Nutritional value'),
+            controller: _nutritionalValueController,
+            hintText: 'Nutritional value',
+            keyboardType: const TextInputType.numberWithOptions(
+                signed: false, decimal: true),
+            //TODO: MAKE SURE IT ONLY ACCEPT POSITIVE INTEGERS WITH TWO DECIMAL
+          ),
         ),
         FloatingActionButton.small(
           backgroundColor: Colors.orange,
@@ -231,6 +235,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                 _nutritionalValueController.text.trim().isNotEmpty) {
               setState(
                 () {
+                  //TODO: int value = int.parse(_nutritionalValueController.text);
                   //https://dart.dev/language/collections#maps
                   //Adds a nutritional property(calories)
                   _nutritionalValues[_nutritionalPropertyController.text] =

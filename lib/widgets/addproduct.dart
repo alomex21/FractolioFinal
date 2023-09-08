@@ -7,6 +7,7 @@ class BuildTextField extends StatelessWidget {
   final int? maxLength;
   final bool showCounter;
   final TextAlign textAlign;
+  final TextInputType keyboardType;
 
   const BuildTextField({
     super.key,
@@ -16,6 +17,7 @@ class BuildTextField extends StatelessWidget {
     this.maxLength,
     this.showCounter = true,
     this.textAlign = TextAlign.left,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -28,6 +30,7 @@ class BuildTextField extends StatelessWidget {
         maxLength: maxLength,
         controller: controller,
         textAlign: textAlign,
+        keyboardType: keyboardType,
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           hintText: hintText,
