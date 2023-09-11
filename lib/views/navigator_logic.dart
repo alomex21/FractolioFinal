@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fractoliotesting/dialogs/logout_dialog.dart';
@@ -6,7 +5,6 @@ import 'package:fractoliotesting/enums/menu_action.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:fractoliotesting/views/camera_preview_screen.dart';
 import 'package:fractoliotesting/views/login.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'main_menu.dart';
 import 'profile_screen.dart';
