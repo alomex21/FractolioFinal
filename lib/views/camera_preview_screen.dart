@@ -12,9 +12,7 @@ class CameraControllerQR extends StatefulWidget {
 }
 
 class _CameraControllerQRState extends State<CameraControllerQR> {
-  @override
   MobileScannerController cameraController = MobileScannerController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

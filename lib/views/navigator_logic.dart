@@ -119,6 +119,7 @@ class LogoutPopUpMenuButton extends StatelessWidget {
             final shouldlogout = await showLogOutDialog(context);
             if (shouldlogout) {
               await AuthService.firebase().logOut();
+
               if (mounted) {
                 Navigator.pushAndRemoveUntil(
                     context,
