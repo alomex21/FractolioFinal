@@ -1,7 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/dialogs/generic_dialog.dart';
+import 'package:fractoliotesting/views/product_page.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class CameraControllerQR extends StatefulWidget {
@@ -13,6 +12,7 @@ class CameraControllerQR extends StatefulWidget {
 
 class _CameraControllerQRState extends State<CameraControllerQR> {
   MobileScannerController cameraController = MobileScannerController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,83 +54,21 @@ class _CameraControllerQRState extends State<CameraControllerQR> {
         ],
       ),
       body: MobileScanner(
-        // fit: BoxFit.contain,
+        fit: BoxFit.contain,
         controller: cameraController,
         onDetect: (capture) {
           final List<Barcode> barcodes = capture.barcodes;
-          final Uint8List? image = capture.image;
-          for (final barcode in barcodes) {
-            debugPrint('Barcode found! ${barcode.rawValue}');
-            showGenericDialog(
-                context: context,
-                title: 'title',
-                content: 'Barcode ${barcode.rawValue}',
-                optionBuilder: (() => {'Ok': null}));
-          }
+          final String? qrcode =
+              barcodes.isNotEmpty ? barcodes[0].rawValue : null;
+          debugPrint('Value of qr is: $qrcode');
+          cameraController.stop();
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => ProductsDetail(productId: qrcode),
+            ),
+          );
         },
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-/* import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-
-class CameraPreviewScreen extends StatefulWidget {
-  final CameraDescription camera;
-
-  const CameraPreviewScreen({super.key, required this.camera});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _CameraPreviewScreenState();
-  }
-}
-
-class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
-  late CameraController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.high,
-    );
-    _controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return Container();
-    }
-    return Scaffold(
-      appBar: AppBar(title: const Text('Camera Preview')),
-      body: CameraPreview(_controller),
-    );
-  }
-}
- */
-
-

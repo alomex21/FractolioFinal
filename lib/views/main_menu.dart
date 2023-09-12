@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/views/add_product.dart';
+import 'package:fractoliotesting/views/product_page.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
 class MainMenu extends StatefulWidget {
@@ -60,6 +61,13 @@ class _MainMenuState extends State<MainMenu> {
             },
           ), */
           FullnameWidget(),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ProductsDetail(
+                        productId: '0R2bSVi2Dy6NmME4i3kN')));
+              },
+              child: const Text('Test Product Page')),
           TextButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
