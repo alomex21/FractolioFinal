@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fractoliotesting/constant/routes.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
 
-class VerifyEmailView extends StatefulWidget {
+class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({super.key});
 
-  @override
-  State<VerifyEmailView> createState() => _VerifyEmailViewState();
-}
-
-class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +25,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         TextButton(
           onPressed: () async {
             await AuthService.firebase().logOut();
-            if (mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                registerRoute,
-                (route) => false,
-              );
-            }
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              registerRoute,
+              (route) => false,
+            );
           },
           child: const Text('Restart'),
         )

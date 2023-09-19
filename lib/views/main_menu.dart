@@ -3,19 +3,9 @@ import 'package:fractoliotesting/views/add_product.dart';
 import 'package:fractoliotesting/views/product_page.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
-class MainMenu extends StatefulWidget {
+class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
 
-  @override
-  State<StatefulWidget> createState() {
-    return _MainMenuState();
-  }
-
-  //@override
-  //_MainMenuState createState() => _MainMenuState();
-}
-
-class _MainMenuState extends State<MainMenu> {
 /*   late Future<String?> _fullNameFuture;
 
   @override
@@ -40,7 +30,6 @@ class _MainMenuState extends State<MainMenu> {
       return null;
     }
   } */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +68,11 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   }
+
+  //@override
+  //_MainMenuState createState() => _MainMenuState();
 }
+
 /* class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {

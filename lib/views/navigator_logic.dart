@@ -21,8 +21,6 @@ class MenuPrincipal extends StatefulWidget {
   }
 }
 
-enum BodyPage { homePage, detailsPage, profileScreen }
-
 class _MenuPrincipalState extends State<MenuPrincipal> {
   //final FirebaseAuth _auth = FirebaseAuth.instance;
   //final screens = const
@@ -49,8 +47,14 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
