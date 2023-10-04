@@ -144,7 +144,7 @@ class MockAuthProvider implements AuthProvider {
   Future<void> sendPasswordReset(String email) async {
     if (!isInitialized) throw NotInitializedException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
-    // TODO: implement sendPasswordReset
+    // TODO: implement sendPasswordReset test
     throw UnimplementedError();
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/* class ProductPage extends StatefulWidget {
+/*
+ class ProductPage extends StatefulWidget {
   final String? qrCodeResult;
 
   const ProductPage({super.key, required this.qrCodeResult});
@@ -186,9 +187,9 @@ class ProductsDetail extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          buildListTile('Product Name', data["product_name"]),
-          buildListTile('Description', data["description"]),
-          buildListTile('Image URL', data["image_url"]),
+          BuildListTile(title: 'Product Name', value: data["product_name"]),
+          BuildListTile(title: 'Description', value: data["description"]),
+          BuildListTile(title: 'Image URL', value: data["image_url"]),
           ListTile(
             title: const Text('Allergens'),
             subtitle: buildAllergens(data["allergens"]),
@@ -199,13 +200,6 @@ class ProductsDetail extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  ListTile buildListTile(String title, String? value) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(value ?? ""),
     );
   }
 
@@ -232,6 +226,25 @@ class ProductsDetail extends StatelessWidget {
             return Text(allergen.toString());
           }).toList() ??
           [],
+    );
+  }
+}
+
+class BuildListTile extends StatelessWidget {
+  const BuildListTile({
+    super.key,
+    required this.title,
+    required this.value,
+  });
+
+  final String title;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(value ?? ""),
     );
   }
 }
