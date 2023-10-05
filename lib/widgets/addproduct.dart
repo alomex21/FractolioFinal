@@ -44,3 +44,15 @@ class BuildTextField extends StatelessWidget {
     );
   }
 }
+
+class ProductImage extends StatelessWidget {
+  const ProductImage(
+      {super.key, required this.productId, required this.imagePath});
+  final String productId;
+  final String imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}

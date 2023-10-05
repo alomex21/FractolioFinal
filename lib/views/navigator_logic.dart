@@ -57,9 +57,12 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _openCamera,
-        child: const Icon(Icons.camera_alt),
+        label: const Text('Open Camera'),
+        icon: const Icon(Icons.camera_alt),
+        isExtended: true,
+        tooltip: "Open camera",
       ),
     );
   }
@@ -79,18 +82,8 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
 
   Future<void> _openCamera() async {
     final status = await Permission.camera.request();
-
     if (status.isGranted) {
-      //final cameras = await availableCameras();
-      //final firstCamera = cameras.first;
       if (!context.mounted) return;
-      /* Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const CameraControllerQR(),
-
-          //CameraPreviewScreen(camera: firstCamera)
-        ),
-      ); */
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const CameraControllerQR()),

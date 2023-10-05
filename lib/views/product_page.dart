@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fractoliotesting/views/product_review.dart';
+import 'package:fractoliotesting/widgets/widgets.dart';
 
 /*
  class ProductPage extends StatefulWidget {
@@ -165,7 +167,7 @@ class ProductsDetail extends StatelessWidget {
           return const Text('Product not found');
         }
 
-        return buildProductDetail(snapshot);
+        return buildProductDetail(snapshot, context);
       },
     );
   }
@@ -177,7 +179,8 @@ class ProductsDetail extends StatelessWidget {
         .snapshots();
   }
 
-  Widget buildProductDetail(AsyncSnapshot<DocumentSnapshot> snapshot) {
+  Widget buildProductDetail(
+      AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
     final Map<String, dynamic> data =
         snapshot.data!.data() as Map<String, dynamic>;
 
@@ -185,20 +188,25 @@ class ProductsDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text(data["product_name"] ?? "Default Product Name"),
       ),
-      body: ListView(
-        children: [
-          BuildListTile(title: 'Product Name', value: data["product_name"]),
-          BuildListTile(title: 'Description', value: data["description"]),
-          BuildListTile(title: 'Image URL', value: data["image_url"]),
-          ListTile(
-            title: const Text('Allergens'),
-            subtitle: buildAllergens(data["allergens"]),
-          ),
-          ListTile(
-            title: const Text('Nutritional Values'),
-            subtitle: buildNutritionalValues(data["nutritional_values"]),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BuildListTile(title: 'Product Name', value: data["product_name"]),
+            BuildListTile(title: 'Description', value: data["description"]),
+            BuildListTile(title: 'Image URL', value: data["image_url"]),
+            ListTile(
+              title: const Text('Allergens'),
+              subtitle: buildAllergens(data["allergens"]),
+            ),
+            ListTile(
+              title: const Text('Nutritional Values'),
+              subtitle: buildNutritionalValues(
+                data["nutritional_values"],
+              ),
+            ),
+            TextbuttonReview(data: data, productId: productId)
+          ],
+        ),
       ),
     );
   }
@@ -227,6 +235,30 @@ class ProductsDetail extends StatelessWidget {
           }).toList() ??
           [],
     );
+  }
+}
+
+class TextbuttonReview extends StatelessWidget {
+  const TextbuttonReview({
+    super.key,
+    required this.data,
+    required this.productId,
+  });
+
+  final Map<String, dynamic> data;
+  final String? productId;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: ((context) => ProductReviewPage(
+                    productName: data["product_name"],
+                    productId: productId,
+                  ))));
+        },
+        child: const Text('View Reviews'));
   }
 }
 
