@@ -3,6 +3,168 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/views/product_review.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
+class ProductsDetail extends StatelessWidget {
+  const ProductsDetail({Key? key, required this.productId}) : super(key: key);
+  final String? productId;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: getProductStream(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Text('Product not found');
+        }
+
+        return buildProductDetail(snapshot, context);
+      },
+    );
+  }
+
+  Stream<DocumentSnapshot> getProductStream() {
+    return FirebaseFirestore.instance
+        .collection('Products')
+        .doc(productId ?? '0R2bSVi2Dy6NmME4i3kN')
+        .snapshots();
+  }
+
+  Widget buildProductDetail(
+      AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
+    final Map<String, dynamic> data =
+        snapshot.data!.data() as Map<String, dynamic>;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(data["product_name"] ?? "Default Product Name"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BuildListTile(title: 'Product Name', value: data["product_name"]),
+            BuildListTile(title: 'Description', value: data["description"]),
+            BuildListTile(title: 'Image URL', value: data["image_url"]),
+            ListTile(
+              title: const Text('Allergens'),
+              subtitle: buildAllergens(data["allergens"]),
+            ),
+            ListTile(
+              title: const Text('Nutritional Values'),
+              subtitle: buildNutritionalValues(
+                data["nutritional_values"],
+              ),
+            ),
+            TextbuttonReview(data: data, productId: productId),
+            TextbuttonReviewtwo(data: data, qrCodeString: productId),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNutritionalValues(Map<String, dynamic>? nutritionalValues) {
+    return Row(
+      children: nutritionalValues?.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Column(
+                children: [
+                  Text("${entry.key}: ${entry.value.toString()}"),
+                ],
+              ),
+            );
+          }).toList() ??
+          [],
+    );
+  }
+
+  Widget buildAllergens(List? allergens) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: allergens?.map((allergen) {
+            return Text(allergen.toString());
+          }).toList() ??
+          [],
+    );
+  }
+}
+
+class TextbuttonReview extends StatelessWidget {
+  const TextbuttonReview({
+    super.key,
+    required this.data,
+    required this.productId,
+  });
+
+  final Map<String, dynamic> data;
+  final String? productId;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: ((context) => ProductReviewPage(
+                    productName: data["product_name"],
+                    productId: productId,
+                  ))));
+        },
+        child: const Text('View Reviews'));
+  }
+}
+
+class TextbuttonReviewtwo extends StatelessWidget {
+  const TextbuttonReviewtwo({
+    super.key,
+    required this.qrCodeString,
+    required this.data,
+  });
+
+  final String? qrCodeString;
+  final Map<String, dynamic> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: ((context) => ProductReviewPageTwo(
+                    qrCodeString: qrCodeString,
+                    productName: data["product_name"],
+                  ))));
+        },
+        child: const Text('View Reviews2'));
+  }
+}
+
+class BuildListTile extends StatelessWidget {
+  const BuildListTile({
+    super.key,
+    required this.title,
+    required this.value,
+  });
+
+  final String title;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(value ?? ""),
+    );
+  }
+}
+
+
 /*
  class ProductPage extends StatefulWidget {
   final String? qrCodeResult;
@@ -144,139 +306,3 @@ class _ProductPageState extends State<ProductPage> {
   }
 }
  */
-
-class ProductsDetail extends StatelessWidget {
-  const ProductsDetail({Key? key, required this.productId}) : super(key: key);
-  final String? productId;
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: getProductStream(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
-
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Text('Product not found');
-        }
-
-        return buildProductDetail(snapshot, context);
-      },
-    );
-  }
-
-  Stream<DocumentSnapshot> getProductStream() {
-    return FirebaseFirestore.instance
-        .collection('Products')
-        .doc(productId ?? '0R2bSVi2Dy6NmME4i3kN')
-        .snapshots();
-  }
-
-  Widget buildProductDetail(
-      AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
-    final Map<String, dynamic> data =
-        snapshot.data!.data() as Map<String, dynamic>;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(data["product_name"] ?? "Default Product Name"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BuildListTile(title: 'Product Name', value: data["product_name"]),
-            BuildListTile(title: 'Description', value: data["description"]),
-            BuildListTile(title: 'Image URL', value: data["image_url"]),
-            ListTile(
-              title: const Text('Allergens'),
-              subtitle: buildAllergens(data["allergens"]),
-            ),
-            ListTile(
-              title: const Text('Nutritional Values'),
-              subtitle: buildNutritionalValues(
-                data["nutritional_values"],
-              ),
-            ),
-            TextbuttonReview(data: data, productId: productId)
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildNutritionalValues(Map<String, dynamic>? nutritionalValues) {
-    return Row(
-      children: nutritionalValues?.entries.map((entry) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Column(
-                children: [
-                  Text("${entry.key}: ${entry.value.toString()}"),
-                ],
-              ),
-            );
-          }).toList() ??
-          [],
-    );
-  }
-
-  Widget buildAllergens(List? allergens) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: allergens?.map((allergen) {
-            return Text(allergen.toString());
-          }).toList() ??
-          [],
-    );
-  }
-}
-
-class TextbuttonReview extends StatelessWidget {
-  const TextbuttonReview({
-    super.key,
-    required this.data,
-    required this.productId,
-  });
-
-  final Map<String, dynamic> data;
-  final String? productId;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: ((context) => ProductReviewPage(
-                    productName: data["product_name"],
-                    productId: productId,
-                  ))));
-        },
-        child: const Text('View Reviews'));
-  }
-}
-
-class BuildListTile extends StatelessWidget {
-  const BuildListTile({
-    super.key,
-    required this.title,
-    required this.value,
-  });
-
-  final String title;
-  final String? value;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(value ?? ""),
-    );
-  }
-}
