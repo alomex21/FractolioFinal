@@ -1,22 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:fractoliotesting/widgets/ratingsystem/starwidgets.dart';
 
 class ProductReviewPageTwo extends StatelessWidget {
-  const ProductReviewPageTwo(
+  ProductReviewPageTwo(
       {super.key, this.qrCodeString, required this.productName});
   final String? qrCodeString;
   final String productName;
+  String get userId => AuthService.firebase().currentUser!.id;
+  final GlobalKey<RefreshIndicatorState> _refreshpage =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(productName)),
-      body: Center(
-        child: Column(
+      body: RefreshIndicator(
+        key: _refreshpage,
+        onRefresh: () async {
+          final state = _refreshpage.currentState!.context
+              .findAncestorStateOfType<AverageRatingState>();
+          if (state != null) {
+            await state.refreshReviews();
+          }
+        },
+        child: ListView(
           children: [
-            AverageRating(qrCodeString: qrCodeString),
-            ReviewInput(qrCodeString: qrCodeString)
+            Center(
+              child: Column(
+                children: [
+                  AverageRating(qrCodeString: qrCodeString),
+                  ReviewInput(
+                    qrCodeString: qrCodeString,
+                    userId: userId,
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

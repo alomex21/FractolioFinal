@@ -1,27 +1,47 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fractoliotesting/services/utilities/extensions.dart';
 
-class AverageRating extends StatelessWidget {
+class AverageRating extends StatefulWidget {
   final String? qrCodeString;
 
   const AverageRating({super.key, required this.qrCodeString});
 
-/*   final Stream<QuerySnapshot> reviewsStream = FirebaseFirestore.instance
-      .collection('Products')
-      .doc(qrCodeString)
-      .collection('reviews')
-      .snapshots(); */
+  @override
+  State<AverageRating> createState() => AverageRatingState();
+}
+
+class AverageRatingState extends State<AverageRating> {
+  // Introduce a controller to listen for stream updates
+  late StreamController<QuerySnapshot> _controller;
+  late Stream<QuerySnapshot> reviewsStream;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = StreamController();
+    reviewsStream = FirebaseFirestore.instance
+        .collection('Products')
+        .doc(widget.qrCodeString)
+        .collection('reviews')
+        .snapshots();
+
+    _controller.addStream(reviewsStream);
+  }
+
+  // Function to refresh the reviews
+  Future<void> refreshReviews() async {
+    _controller.addStream(reviewsStream);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final reviewsStream = FirebaseFirestore.instance
-        .collection('Products')
-        .doc(qrCodeString)
-        .collection('reviews')
-        .snapshots();
     return StreamBuilder<QuerySnapshot>(
-      stream: reviewsStream,
+      stream: _controller.stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final reviews = snapshot.data!.docs;
@@ -33,20 +53,29 @@ class AverageRating extends StatelessWidget {
 
           double averageRating =
               reviews.isNotEmpty ? totalRating / reviews.length : 0;
+          double roundedAverage = averageRating.toPrecision(2);
 
-          return Text('Average Rating: $averageRating');
+          return Text('Average Rating: $roundedAverage');
         }
 
-        return const CircularProgressIndicator(); // Loading indicator while fetching data
+        return const CircularProgressIndicator();
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 }
 
 class ReviewInput extends StatefulWidget {
   final String? qrCodeString;
+  final String userId;
 
-  const ReviewInput({super.key, required this.qrCodeString});
+  const ReviewInput(
+      {super.key, required this.qrCodeString, required this.userId});
 
   @override
   State<ReviewInput> createState() => _ReviewInputState();
@@ -54,8 +83,7 @@ class ReviewInput extends StatefulWidget {
 
 class _ReviewInputState extends State<ReviewInput> {
   double _currentRating = 0;
-  String _currentReview = ''; // Store the user's written review
-
+  String _currentReview = '';
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -76,7 +104,6 @@ class _ReviewInputState extends State<ReviewInput> {
           },
         ),
         TextField(
-          // Input field for the written review
           onChanged: (value) {
             _currentReview = value;
           },
@@ -88,15 +115,26 @@ class _ReviewInputState extends State<ReviewInput> {
           onPressed: () async {
             // Save to Firestore
             await FirebaseFirestore.instance
-                .collection('products')
+                .collection('Products')
+                .doc(widget.qrCodeString)
+                .collection('reviews')
+                .doc(widget.userId)
+                .set({
+              'user_id': widget.userId,
+              'rating': _currentRating,
+              'text': _currentReview,
+            }, SetOptions(merge: true));
+
+            /* await FirebaseFirestore.instance
+                .collection('Products')
                 .doc(widget.qrCodeString)
                 .collection('reviews')
                 .add({
-              'user_id':
-                  "your_current_user_id", // Ideally get this from Firebase Auth or your user system
+              'user_id': widget
+                  .userId, // Ideally get this from Firebase Auth or your user system
               'rating': _currentRating,
               'text': _currentReview,
-            });
+            }); */
           },
           child: const Text('Submit Review'),
         ),
