@@ -34,7 +34,8 @@ class ProductReviewPageTwo extends StatelessWidget {
                   ReviewInput(
                     qrCodeString: qrCodeString,
                     userId: userId,
-                  )
+                  ),
+                  ProductReviews(productId: qrCodeString)
                 ],
               ),
             ),

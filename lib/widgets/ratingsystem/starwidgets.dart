@@ -120,6 +120,7 @@ class _ReviewInputState extends State<ReviewInput> {
                   : () async {
                       setState(() {
                         _isLoading = true;
+                        FocusScope.of(context).unfocus();
                       });
                       try {
                         await FirebaseFirestore.instance
@@ -162,6 +163,80 @@ class _ReviewInputState extends State<ReviewInput> {
             child: CircularProgressIndicator(),
           ),
       ],
+    );
+  }
+}
+
+class ProductReviews extends StatefulWidget {
+  const ProductReviews({super.key, required this.productId});
+  final String? productId;
+
+  @override
+  State<ProductReviews> createState() => _ProductReviewsState();
+}
+
+class _ProductReviewsState extends State<ProductReviews> {
+  late Stream<QuerySnapshot> _reviewsStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _reviewsStream = FirebaseFirestore.instance
+        .collection('Products')
+        .doc(widget.productId)
+        .collection('reviews')
+        .snapshots();
+  }
+
+  Future<String> _getUsername(String userId) async {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    return userDoc.get('username') as String;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _reviewsStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            DocumentSnapshot reviewData = snapshot.data!.docs[index];
+            double rating = reviewData.get('rating');
+            String text = reviewData.get('text');
+            String userId = reviewData.get('user_id');
+
+            return FutureBuilder<String>(
+              future: _getUsername(userId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const ListTile(title: CircularProgressIndicator());
+                }
+
+                String username = snapshot.data!;
+                return ListTile(
+                  title: Text(username),
+                  subtitle: Text(text),
+                  leading: CircleAvatar(
+                    child: Text(rating.toString()),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
