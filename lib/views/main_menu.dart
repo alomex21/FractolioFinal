@@ -33,38 +33,40 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-/*           FutureBuilder<String?>(
-            future: _fullNameFuture,
-            builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('Loading...');
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData && snapshot.data != null) {
-                return Text('Welcome, ${snapshot.data}!');
-              } else {
-                return const Text('Welcome!');
-              }
-            },
-          ), */
-          FullnameWidget(),
-          TextButton(
+      body: Center(
+        child: Column(
+          children: [
+            /*           FutureBuilder<String?>(
+              future: _fullNameFuture,
+              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text('Loading...');
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return Text('Welcome, ${snapshot.data}!');
+                } else {
+                  return const Text('Welcome!');
+                }
+              },
+            ), */
+            FullnameWidget(),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ProductsDetail(
+                          productId: '0R2bSVi2Dy6NmME4i3kN')));
+                },
+                child: const Text('Test Product Page')),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ProductsDetail(
-                        productId: '0R2bSVi2Dy6NmME4i3kN')));
+                    builder: (context) => const ProductInfoForm()));
               },
-              child: const Text('Test Product Page')),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ProductInfoForm()));
-            },
-            child: const Text('add product'),
-          )
-        ],
+              child: const Text('add product'),
+            )
+          ],
+        ),
       ),
     );
   }
