@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/dialogs/generic_dialog.dart';
 import 'package:fractoliotesting/views/product_page.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 

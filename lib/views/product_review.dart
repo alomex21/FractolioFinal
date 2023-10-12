@@ -54,7 +54,6 @@ class ProductReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _rating;
     return Scaffold(
         appBar: AppBar(
           title: Text(productName),
