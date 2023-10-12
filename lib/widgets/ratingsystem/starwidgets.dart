@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fractoliotesting/services/utilities/extensions.dart';
+import 'package:fractoliotesting/models/review.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fractoliotesting/services/services/firestore_service.dart';
+//
 
 class AverageRating extends StatefulWidget {
   final String? qrCodeString;
@@ -15,47 +17,27 @@ class AverageRating extends StatefulWidget {
 }
 
 class AverageRatingState extends State<AverageRating> {
-  // Introduce a controller to listen for stream updates
-  late StreamController<QuerySnapshot> _controller;
-  late Stream<QuerySnapshot> reviewsStream;
+  late Stream<double> _averageRatingStream;
+  final dbService = FirestoreService();
 
   @override
   void initState() {
     super.initState();
-
-    _controller = StreamController();
-    reviewsStream = FirebaseFirestore.instance
-        .collection('Products')
-        .doc(widget.qrCodeString)
-        .collection('reviews')
-        .snapshots();
-
-    _controller.addStream(reviewsStream);
-  }
-
-  // Function to refresh the reviews
-  Future<void> refreshReviews() async {
-    _controller.addStream(reviewsStream);
+    _averageRatingStream =
+        dbService.fetchProductAverageRating(widget.qrCodeString!);
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _controller.stream,
+    return StreamBuilder<double>(
+      stream: _averageRatingStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final reviews = snapshot.data!.docs;
-          double totalRating = 0.0;
-
-          for (var review in reviews) {
-            totalRating += review.get('rating');
+          if (snapshot.hasData) {
+            double averageRating = snapshot.data!;
+            double roundedAverage = (averageRating * 100).roundToDouble() / 100;
+            return Text('Average Rating: $roundedAverage');
           }
-
-          double averageRating =
-              reviews.isNotEmpty ? totalRating / reviews.length : 0;
-          double roundedAverage = averageRating.toPrecision(2);
-
-          return Text('Average Rating: $roundedAverage');
         }
 
         return const CircularProgressIndicator();
@@ -63,10 +45,13 @@ class AverageRatingState extends State<AverageRating> {
     );
   }
 
-  @override
-  void dispose() {
-    _controller.close();
-    super.dispose();
+  Future<void> refreshReviews() async {
+    setState(
+      () {
+        _averageRatingStream =
+            dbService.fetchProductAverageRating(widget.qrCodeString!);
+      },
+    );
   }
 }
 
@@ -82,6 +67,24 @@ class ReviewInput extends StatefulWidget {
 }
 
 class _ReviewInputState extends State<ReviewInput> {
+  @override
+  void initState() {
+    _fetchUserReview();
+    super.initState();
+  }
+
+  Future<void> _fetchUserReview() async {
+    final userReview =
+        await dbService.getUserReview(widget.qrCodeString!, widget.userId);
+    if (userReview != null) {
+      setState(() {
+        _currentRating = userReview.rating;
+        _currentReview = userReview.text;
+      });
+    }
+  }
+
+  FirestoreService dbService = FirestoreService();
   double _currentRating = 0;
   String _currentReview = '';
   bool _isLoading = false;
@@ -92,7 +95,7 @@ class _ReviewInputState extends State<ReviewInput> {
         Column(
           children: [
             RatingBar.builder(
-              initialRating: 0,
+              initialRating: _currentRating,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -123,16 +126,9 @@ class _ReviewInputState extends State<ReviewInput> {
                         FocusScope.of(context).unfocus();
                       });
                       try {
-                        await FirebaseFirestore.instance
-                            .collection('Products')
-                            .doc(widget.qrCodeString)
-                            .collection('reviews')
-                            .doc(widget.userId)
-                            .set({
-                          'user_id': widget.userId,
-                          'rating': _currentRating,
-                          'text': _currentReview,
-                        }, SetOptions(merge: true));
+                        await dbService.setReview(widget.qrCodeString,
+                            widget.userId, _currentRating, _currentReview,
+                            merge: true);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -176,28 +172,26 @@ class ProductReviews extends StatefulWidget {
 }
 
 class _ProductReviewsState extends State<ProductReviews> {
-  late Stream<QuerySnapshot> _reviewsStream;
+  late Stream<List<Review>> _reviewsStream;
+  final dbService = FirestoreService(); // Use the service
 
   @override
   void initState() {
     super.initState();
-    _reviewsStream = FirebaseFirestore.instance
-        .collection('Products')
-        .doc(widget.productId)
-        .collection('reviews')
-        .snapshots();
+
+    _reviewsStream = dbService.fetchProductReviews(widget.productId!);
   }
 
-  Future<String> _getUsername(String userId) async {
+/*   Future<String> _getUsername(String userId) async {
     DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     return userDoc.get('username') as String;
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<Review>>(
       stream: _reviewsStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -207,29 +201,31 @@ class _ProductReviewsState extends State<ProductReviews> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         }
+        final reviews = snapshot.data!;
 
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: snapshot.data!.docs.length,
+          itemCount: reviews.length,
           itemBuilder: (context, index) {
-            DocumentSnapshot reviewData = snapshot.data!.docs[index];
-            double rating = reviewData.get('rating');
-            String text = reviewData.get('text');
-            String userId = reviewData.get('user_id');
-
+            Review review = reviews[index];
             return FutureBuilder<String>(
-              future: _getUsername(userId),
+              future: dbService.getUsername(review.userId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const ListTile(title: CircularProgressIndicator());
+                  return const ListTile(
+                      title: Center(
+                          child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator())));
                 }
 
                 String username = snapshot.data!;
                 return ListTile(
                   title: Text(username),
-                  subtitle: Text(text),
+                  subtitle: Text(review.text),
                   leading: CircleAvatar(
-                    child: Text(rating.toString()),
+                    child: Text(review.rating.toString()),
                   ),
                 );
               },
