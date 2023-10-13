@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:string_capitalize/string_capitalize.dart';
 import 'product_review.dart';
+import 'package:flutter/services.dart';
 
 class ProductsDetail extends StatelessWidget {
-  const ProductsDetail({Key? key, required this.productId}) : super(key: key);
+  ProductsDetail({Key? key, required this.productId}) : super(key: key) {
+    assert(productId != null);
+  }
 
   final String? productId;
 
@@ -17,7 +21,7 @@ class ProductsDetail extends StatelessWidget {
   Widget buildProductDetail(
       AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
     final Map<String, dynamic> data =
-        snapshot.data!.data() as Map<String, dynamic>;
+        snapshot.data?.data() as Map<String, dynamic> ?? {};
 
     return Scaffold(
       appBar: AppBar(
@@ -26,21 +30,17 @@ class ProductsDetail extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            BuildListTile(title: 'Product Name', value: data["product_name"]),
-            BuildListTile(title: 'Description', value: data["description"]),
-            BuildListTile(title: 'Image URL', value: data["image_url"]),
-            ListTile(
-              title: const Text('Allergens'),
-              subtitle: buildAllergens(data["allergens"]),
-            ),
-            ListTile(
-              title: const Text('Nutritional Values'),
-              subtitle: buildNutritionalValues(
-                data["nutritional_values"],
-              ),
-            ),
-            TextbuttonReview(data: data, productId: productId),
-            TextbuttonReviewtwo(data: data, qrCodeString: productId),
+            BuildListTile(
+                title: 'Product Name', value: data["product_name"] ?? ''),
+            BuildListTile(
+                title: 'Description', value: data["description"] ?? ''),
+            BuildListTile(title: 'Image URL', value: data["image_url"] ?? ''),
+            AllergensWidget(
+                title: "Allergens", allergens: data["allergens"] ?? ''),
+            NutritionalValues(
+                title: "Nutritional Values",
+                nutritionalValues: data["nutritional_values"] ?? ''),
+            TextbuttonReview(data: data, qrCodeString: productId),
           ],
         ),
       ),
@@ -97,32 +97,64 @@ class ProductsDetail extends StatelessWidget {
   }
 }
 
-class TextbuttonReview extends StatelessWidget {
-  const TextbuttonReview({
-    super.key,
-    required this.data,
-    required this.productId,
-  });
-
-  final Map<String, dynamic> data;
-  final String? productId;
+class AllergensWidget extends StatelessWidget {
+  final String title;
+  final List? allergens;
+  const AllergensWidget({super.key, this.allergens, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: ((context) => ProductReviewPage(
-                    productName: data["product_name"],
-                    productId: productId,
-                  ))));
-        },
-        child: const Text('View Reviews'));
+    return InkWell(
+      child: ListTile(
+        title: Text(title),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: allergens?.map((allergen) {
+                return Text(allergen.toString());
+              }).toList() ??
+              [],
+        ),
+      ),
+    );
   }
 }
 
-class TextbuttonReviewtwo extends StatelessWidget {
-  const TextbuttonReviewtwo({
+class NutritionalValues extends StatelessWidget {
+  final String title;
+  final Map<String, dynamic>? nutritionalValues;
+  const NutritionalValues(
+      {super.key, required this.title, this.nutritionalValues});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onLongPress: () {
+        _copyToClipboard(context, nutritionalValues);
+      },
+      child: ListTile(
+        title: Text(title),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: nutritionalValues?.entries.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Column(
+                    children: [
+                      Text(
+                          "-${entry.key.capitalize()}: ${entry.value.toString()}"),
+                    ],
+                  ),
+                );
+              }).toList() ??
+              [],
+        ),
+      ),
+    );
+  }
+}
+
+class TextbuttonReview extends StatelessWidget {
+  const TextbuttonReview({
     super.key,
     required this.qrCodeString,
     required this.data,
@@ -141,7 +173,7 @@ class TextbuttonReviewtwo extends StatelessWidget {
                     productName: data["product_name"],
                   ))));
         },
-        child: const Text('View Reviews2'));
+        child: const Text('View Reviews'));
   }
 }
 
@@ -157,12 +189,38 @@ class BuildListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(value ?? ""),
+    return InkWell(
+      onLongPress: () {
+        _copyToClipboard(context, value);
+      },
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(value ?? ""),
+      ),
     );
   }
 }
+
+void _copyToClipboard(BuildContext context, dynamic value) {
+  if (value != null) {
+    String stringValue;
+
+    if (value is Map) {
+      stringValue = value.entries.map((entry) {
+        return '${entry.key}: ${entry.value}';
+      }).join('\n'); // convert map to string
+    } else {
+      stringValue =
+          value.toString(); // For other types like String, int, double etc.
+    }
+
+    Clipboard.setData(ClipboardData(text: stringValue));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Copied to clipboard')),
+    );
+  }
+}
+
 
 
 /*

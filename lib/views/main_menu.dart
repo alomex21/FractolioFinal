@@ -57,8 +57,8 @@ class MainMenu extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ProductsDetail(
-                          productId: '0R2bSVi2Dy6NmME4i3kN')));
+                      builder: (context) =>
+                          ProductsDetail(productId: '0R2bSVi2Dy6NmME4i3kN')));
                 },
                 child: const Text('Test Product Page')),
             TextButton(
