@@ -14,19 +14,19 @@ class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _username;
 
   @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    _username = TextEditingController();
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _email.dispose();
     _password.dispose();
     _username.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    _password = TextEditingController();
+    _username = TextEditingController();
+    super.initState();
   }
 
   @override

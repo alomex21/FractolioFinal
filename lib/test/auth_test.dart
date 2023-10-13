@@ -76,10 +76,9 @@ void main() {
 class NotInitializedException implements Exception {}
 
 class MockAuthProvider implements AuthProvider {
-  AuthUser? _user;
   var _isInitialized = false;
+  AuthUser? _user;
 
-  bool get isInitialized => _isInitialized;
   @override
   Future<AuthUser> createUser({
     required String email,
@@ -147,4 +146,6 @@ class MockAuthProvider implements AuthProvider {
     // TODO: implement sendPasswordReset test
     throw UnimplementedError();
   }
+
+  bool get isInitialized => _isInitialized;
 }

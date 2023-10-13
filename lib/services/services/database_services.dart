@@ -6,7 +6,10 @@ abstract class DatabaseService {
       {bool merge});
 
   Future<String> getUsername(String userId);
+
   Stream<double> fetchProductAverageRating(String? productId);
+
   Stream<List<Review>> fetchProductReviews(String? productId);
+
   Future<Review?> getUserReview(String? productId, String userId);
 }

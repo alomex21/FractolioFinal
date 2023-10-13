@@ -6,11 +6,14 @@ import 'package:fractoliotesting/widgets/ratingsystem/starwidgets.dart';
 class ProductReviewPageTwo extends StatelessWidget {
   ProductReviewPageTwo(
       {super.key, this.qrCodeString, required this.productName});
-  final String? qrCodeString;
+
   final String productName;
-  String get userId => AuthService.firebase().currentUser!.id;
+  final String? qrCodeString;
+
   final GlobalKey<RefreshIndicatorState> _refreshpage =
       GlobalKey<RefreshIndicatorState>();
+
+  String get userId => AuthService.firebase().currentUser!.id;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,9 @@ class ProductReviewPageTwo extends StatelessWidget {
 class ProductReviewPage extends StatelessWidget {
   const ProductReviewPage(
       {super.key, required this.productName, required this.productId});
-  final String productName;
+
   final String? productId;
+  final String productName;
 
   @override
   Widget build(BuildContext context) {

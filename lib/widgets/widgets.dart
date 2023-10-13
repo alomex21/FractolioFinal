@@ -10,13 +10,14 @@ import 'package:string_capitalize/string_capitalize.dart';
 
 //BOTON PERFIL
 class BotonPerfil extends StatelessWidget {
-  final String text;
-  final VoidCallback? onTap;
   const BotonPerfil({
     super.key,
     required this.text,
     this.onTap,
   });
+
+  final VoidCallback? onTap;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +59,10 @@ class BotonPerfil extends StatelessWidget {
 
 //EDITAR TEXT DE BOTON PERFIL
 class EditText extends StatelessWidget {
-  final String displayText;
   const EditText(this.displayText, {Key? key}) : super(key: key);
+
+  final String displayText;
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -82,9 +85,10 @@ class LoginState extends StatelessWidget {
   })  : _email = email,
         _password = password;
 
+  final bool mounted;
+
   final TextEditingController _email;
   final TextEditingController _password;
-  final bool mounted;
 
   @override
   Widget build(BuildContext context) {
@@ -194,10 +198,11 @@ class RegisterState extends StatelessWidget {
         _password = password,
         _username = username;
 
+  final bool mounted;
+
   final TextEditingController _email;
   final TextEditingController _password;
   final TextEditingController _username;
-  final bool mounted;
 
   @override
   Widget build(BuildContext context) {

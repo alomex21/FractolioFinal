@@ -8,23 +8,33 @@ import 'package:fractoliotesting/services/services/firestore_service.dart';
 //
 
 class AverageRating extends StatefulWidget {
-  final String? qrCodeString;
-
   const AverageRating({super.key, required this.qrCodeString});
+
+  final String? qrCodeString;
 
   @override
   State<AverageRating> createState() => AverageRatingState();
 }
 
 class AverageRatingState extends State<AverageRating> {
-  late Stream<double> _averageRatingStream;
   final dbService = FirestoreService();
+
+  late Stream<double> _averageRatingStream;
 
   @override
   void initState() {
     super.initState();
     _averageRatingStream =
         dbService.fetchProductAverageRating(widget.qrCodeString!);
+  }
+
+  Future<void> refreshReviews() async {
+    setState(
+      () {
+        _averageRatingStream =
+            dbService.fetchProductAverageRating(widget.qrCodeString!);
+      },
+    );
   }
 
   @override
@@ -44,29 +54,26 @@ class AverageRatingState extends State<AverageRating> {
       },
     );
   }
-
-  Future<void> refreshReviews() async {
-    setState(
-      () {
-        _averageRatingStream =
-            dbService.fetchProductAverageRating(widget.qrCodeString!);
-      },
-    );
-  }
 }
 
 class ReviewInput extends StatefulWidget {
-  final String? qrCodeString;
-  final String userId;
-
   const ReviewInput(
       {super.key, required this.qrCodeString, required this.userId});
+
+  final String? qrCodeString;
+  final String userId;
 
   @override
   State<ReviewInput> createState() => _ReviewInputState();
 }
 
 class _ReviewInputState extends State<ReviewInput> {
+  FirestoreService dbService = FirestoreService();
+
+  double _currentRating = 0;
+  String _currentReview = '';
+  bool _isLoading = false;
+
   @override
   void initState() {
     _fetchUserReview();
@@ -84,10 +91,6 @@ class _ReviewInputState extends State<ReviewInput> {
     }
   }
 
-  FirestoreService dbService = FirestoreService();
-  double _currentRating = 0;
-  String _currentReview = '';
-  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -165,6 +168,7 @@ class _ReviewInputState extends State<ReviewInput> {
 
 class ProductReviews extends StatefulWidget {
   const ProductReviews({super.key, required this.productId});
+
   final String? productId;
 
   @override
@@ -172,8 +176,9 @@ class ProductReviews extends StatefulWidget {
 }
 
 class _ProductReviewsState extends State<ProductReviews> {
-  late Stream<List<Review>> _reviewsStream;
   final dbService = FirestoreService(); // Use the service
+
+  late Stream<List<Review>> _reviewsStream;
 
   @override
   void initState() {

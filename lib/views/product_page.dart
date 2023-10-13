@@ -4,30 +4,8 @@ import 'package:fractoliotesting/views/product_review.dart';
 
 class ProductsDetail extends StatelessWidget {
   const ProductsDetail({Key? key, required this.productId}) : super(key: key);
+
   final String? productId;
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: getProductStream(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
-
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Text('Product not found');
-        }
-
-        return buildProductDetail(snapshot, context);
-      },
-    );
-  }
 
   Stream<DocumentSnapshot> getProductStream() {
     return FirebaseFirestore.instance
@@ -94,6 +72,29 @@ class ProductsDetail extends StatelessWidget {
           [],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: getProductStream(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Text('Product not found');
+        }
+
+        return buildProductDetail(snapshot, context);
+      },
+    );
+  }
 }
 
 class TextbuttonReview extends StatelessWidget {
@@ -127,8 +128,8 @@ class TextbuttonReviewtwo extends StatelessWidget {
     required this.data,
   });
 
-  final String? qrCodeString;
   final Map<String, dynamic> data;
+  final String? qrCodeString;
 
   @override
   Widget build(BuildContext context) {

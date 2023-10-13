@@ -3,9 +3,6 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class AuthUser {
-  final String id;
-  final String email;
-  final bool isEmailVerified;
   const AuthUser({
     required this.id,
     required this.email,
@@ -17,4 +14,8 @@ class AuthUser {
         email: user.email!,
         isEmailVerified: user.emailVerified,
       );
+
+  final String email;
+  final String id;
+  final bool isEmailVerified;
 }

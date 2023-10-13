@@ -14,20 +14,18 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final currentUser = FirebaseAuth.instance.currentUser;
   var newPassword = '';
-
   final newPasswordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     newPasswordController.dispose();
     super.dispose();
   }
-
-  final currentUser = FirebaseAuth.instance.currentUser;
 
   changePassword() async {
     try {
@@ -55,6 +53,19 @@ class _EditProfileState extends State<EditProfile> {
         );
       }
     }
+  }
+
+  void _logout() async {
+    await _auth.signOut();
+    if (!context.mounted) return;
+    Navigator.of(context).pushReplacementNamed(
+      '/',
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Successfully signed out!'),
+      ),
+    );
   }
 
   @override
@@ -141,19 +152,6 @@ class _EditProfileState extends State<EditProfile> {
             )
           ],
         ),
-      ),
-    );
-  }
-
-  void _logout() async {
-    await _auth.signOut();
-    if (!context.mounted) return;
-    Navigator.of(context).pushReplacementNamed(
-      '/',
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Successfully signed out!'),
       ),
     );
   }

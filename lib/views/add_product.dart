@@ -14,19 +14,20 @@ class ProductInfoForm extends StatefulWidget {
 }
 
 class _ProductInfoFormState extends State<ProductInfoForm> {
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _qrCodeController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _imageURLController = TextEditingController();
   final TextEditingController _allergenController = TextEditingController();
+  final List<String> _allergens = [];
+  final TextEditingController _descriptionController = TextEditingController();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final TextEditingController _imageURLController = TextEditingController();
   final TextEditingController _nutritionalPropertyController =
       TextEditingController();
+
   final TextEditingController _nutritionalValueController =
       TextEditingController();
 
-  final List<String> _allergens = [];
   final Map<String, String> _nutritionalValues = {};
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _qrCodeController = TextEditingController();
 
   @override
   void dispose() {
@@ -38,69 +39,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _allergenController.dispose();
     _nutritionalPropertyController.dispose();
     _nutritionalValueController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Product'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Form(
-          key: _formkey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Divider(),
-                BuildTextField(
-                  controller: _productNameController,
-                  hintText: 'Enter product name...',
-                  textAlign: TextAlign.center,
-                ),
-                BuildTextField(
-                    controller: _qrCodeController, hintText: 'Enter QRCode'),
-                BuildTextField(
-                  controller: _descriptionController,
-                  hintText: 'Enter description',
-                  minLines: 1,
-                  showCounter: true,
-                  maxLength: 500,
-                ),
-                BuildTextField(
-                    controller: _imageURLController,
-                    hintText: 'Enter imageURL...'),
-                AllergenListView(
-                    allergens: _allergens,
-                    onRemoveAllergen: (index) {
-                      setState(() {
-                        _allergens.removeAt(index);
-                      });
-                    }),
-                //_buildAllergenListView(),
-                AllergenRow(
-                    controller: _allergenController,
-                    onAddAllergen: (allergen) {
-                      setState(() {
-                        _allergens.add(allergen);
-                        _allergenController.clear();
-                      });
-                    }),
-                //_addAllergenRow(),
-                _buildNutritionalListView(),
-                _addNutritionalRow(),
-                const Divider(),
-                _submitButton(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
 /*   Widget _buildTextField(
@@ -337,5 +275,68 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
 
       // Clear the allergens and nutritional values lists
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Product'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Form(
+          key: _formkey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Divider(),
+                BuildTextField(
+                  controller: _productNameController,
+                  hintText: 'Enter product name...',
+                  textAlign: TextAlign.center,
+                ),
+                BuildTextField(
+                    controller: _qrCodeController, hintText: 'Enter QRCode'),
+                BuildTextField(
+                  controller: _descriptionController,
+                  hintText: 'Enter description',
+                  minLines: 1,
+                  showCounter: true,
+                  maxLength: 500,
+                ),
+                BuildTextField(
+                    controller: _imageURLController,
+                    hintText: 'Enter imageURL...'),
+                AllergenListView(
+                    allergens: _allergens,
+                    onRemoveAllergen: (index) {
+                      setState(() {
+                        _allergens.removeAt(index);
+                      });
+                    }),
+                //_buildAllergenListView(),
+                AllergenRow(
+                    controller: _allergenController,
+                    onAddAllergen: (allergen) {
+                      setState(() {
+                        _allergens.add(allergen);
+                        _allergenController.clear();
+                      });
+                    }),
+                //_addAllergenRow(),
+                _buildNutritionalListView(),
+                _addNutritionalRow(),
+                const Divider(),
+                _submitButton(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

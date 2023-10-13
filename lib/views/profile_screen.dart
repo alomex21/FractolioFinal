@@ -7,6 +7,10 @@ import 'package:fractoliotesting/widgets/widgets.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  void _didPushButton(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed('/navigator');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,9 +56,5 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _didPushButton(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/navigator');
   }
 }

@@ -3,11 +3,11 @@ import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import 'package:fractoliotesting/widgets/addproduct.dart';
 
 class AllergenListView extends StatefulWidget {
-  final List<String> allergens;
-  final Function(int) onRemoveAllergen;
-
   const AllergenListView(
       {super.key, required this.allergens, required this.onRemoveAllergen});
+
+  final List<String> allergens;
+  final Function(int) onRemoveAllergen;
 
   @override
   AllergenListViewState createState() => AllergenListViewState();
@@ -35,11 +35,11 @@ class AllergenListViewState extends State<AllergenListView> {
 }
 
 class AllergenRow extends StatelessWidget {
-  final TextEditingController controller;
-  final Function(String) onAddAllergen;
-
   const AllergenRow(
       {super.key, required this.controller, required this.onAddAllergen});
+
+  final TextEditingController controller;
+  final Function(String) onAddAllergen;
 
   @override
   Widget build(BuildContext context) {

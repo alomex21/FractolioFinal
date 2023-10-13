@@ -22,13 +22,43 @@ class MenuPrincipal extends StatefulWidget {
 }
 
 class _MenuPrincipalState extends State<MenuPrincipal> {
+  int currentIndex = 0;
   //final FirebaseAuth _auth = FirebaseAuth.instance;
   //final screens = const
   final List<Widget> screens = [
     const MainMenu(),
     const ProfileScreen(),
   ];
-  int currentIndex = 0;
+
+  // void _logout() async {
+  //   await _auth.signOut();
+  //   if (!context.mounted) return;
+  //   Navigator.of(context).pushReplacementNamed(
+  //     '/',
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Successfully signed out!'),
+  //     ),
+  //   );
+  // }
+
+  Future<void> _openCamera() async {
+    final status = await Permission.camera.request();
+    if (status.isGranted) {
+      if (!context.mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CameraControllerQR()),
+      );
+    } else {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Camera permission is not granted')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,35 +95,6 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
         tooltip: "Open camera",
       ),
     );
-  }
-
-  // void _logout() async {
-  //   await _auth.signOut();
-  //   if (!context.mounted) return;
-  //   Navigator.of(context).pushReplacementNamed(
-  //     '/',
-  //   );
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text('Successfully signed out!'),
-  //     ),
-  //   );
-  // }
-
-  Future<void> _openCamera() async {
-    final status = await Permission.camera.request();
-    if (status.isGranted) {
-      if (!context.mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CameraControllerQR()),
-      );
-    } else {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Camera permission is not granted')),
-      );
-    }
   }
 }
 

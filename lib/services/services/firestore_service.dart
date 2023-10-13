@@ -3,42 +3,19 @@ import 'package:fractoliotesting/models/review.dart';
 import 'package:fractoliotesting/services/services/database_services.dart';
 
 class FirestoreService implements DatabaseService {
-  // Singleton instance
-  static final FirestoreService _instance = FirestoreService._internal();
-
-  // Firebase instance
-  final FirebaseFirestore _firebaseInstance = FirebaseFirestore.instance;
-
-  // Private constructor
-  FirestoreService._internal();
-
   // Factory constructor
   factory FirestoreService() {
     return _instance;
   }
 
-  @override
-  Future<void> setReview(
-      String? productId, String userId, double rating, String reviewText,
-      {bool merge = false}) async {
-    return await _firebaseInstance
-        .collection('Products')
-        .doc(productId)
-        .collection('reviews')
-        .doc(userId)
-        .set({
-      'user_id': userId,
-      'rating': rating,
-      'text': reviewText,
-    }, SetOptions(merge: merge));
-  }
+  // Private constructor
+  FirestoreService._internal();
 
-  @override
-  Future<String> getUsername(String? userId) async {
-    DocumentSnapshot userDoc =
-        await _firebaseInstance.collection('users').doc(userId).get();
-    return userDoc.get('username') as String;
-  }
+  // Singleton instance
+  static final FirestoreService _instance = FirestoreService._internal();
+
+  // Firebase instance
+  final FirebaseFirestore _firebaseInstance = FirebaseFirestore.instance;
 
   @override
   Stream<double> fetchProductAverageRating(String? productId) {
@@ -89,5 +66,28 @@ class FirestoreService implements DatabaseService {
       );
     }
     return null;
+  }
+
+  @override
+  Future<String> getUsername(String? userId) async {
+    DocumentSnapshot userDoc =
+        await _firebaseInstance.collection('users').doc(userId).get();
+    return userDoc.get('username') as String;
+  }
+
+  @override
+  Future<void> setReview(
+      String? productId, String userId, double rating, String reviewText,
+      {bool merge = false}) async {
+    return await _firebaseInstance
+        .collection('Products')
+        .doc(productId)
+        .collection('reviews')
+        .doc(userId)
+        .set({
+      'user_id': userId,
+      'rating': rating,
+      'text': reviewText,
+    }, SetOptions(merge: merge));
   }
 }

@@ -13,15 +13,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   late final TextEditingController _email = TextEditingController();
 
   @override
-  void initState() {
-    //_email.dispose();
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _email.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    //_email.dispose();
+    super.initState();
   }
 
   @override

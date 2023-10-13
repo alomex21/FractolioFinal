@@ -6,6 +6,9 @@ import 'package:fractoliotesting/widgets/widgets.dart';
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
 
+  //@override
+  //_MainMenuState createState() => _MainMenuState();
+
 /*   late Future<String?> _fullNameFuture;
 
   @override
@@ -70,9 +73,6 @@ class MainMenu extends StatelessWidget {
       ),
     );
   }
-
-  //@override
-  //_MainMenuState createState() => _MainMenuState();
 }
 
 /* class _MainMenuState extends State<MainMenu> {

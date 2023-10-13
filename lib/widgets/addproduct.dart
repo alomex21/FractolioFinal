@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
 class BuildTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final int? minLines;
-  final int? maxLength;
-  final bool showCounter;
-  final TextAlign textAlign;
-  final TextInputType keyboardType;
-
   const BuildTextField({
     super.key,
     required this.controller,
@@ -19,6 +11,14 @@ class BuildTextField extends StatelessWidget {
     this.textAlign = TextAlign.left,
     this.keyboardType = TextInputType.text,
   });
+
+  final TextEditingController controller;
+  final String hintText;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final int? minLines;
+  final bool showCounter;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,9 @@ class BuildTextField extends StatelessWidget {
 class ProductImage extends StatelessWidget {
   const ProductImage(
       {super.key, required this.productId, required this.imagePath});
-  final String productId;
+
   final String imagePath;
+  final String productId;
 
   @override
   Widget build(BuildContext context) {

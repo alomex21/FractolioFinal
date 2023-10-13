@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 
 @immutable
 class FirebaseUser {
-  final String uid;
-  final String fullName;
-  final String email;
-  final String joinedDate;
-  final String? dietaryPreferences;
-
   const FirebaseUser(
       {required this.uid,
       required this.fullName,
       required this.email,
       required this.joinedDate,
       this.dietaryPreferences});
+
+  final String? dietaryPreferences;
+  final String email;
+  final String fullName;
+  final String joinedDate;
+  final String uid;
 
   Map<String, dynamic> toJson() => {
         'username': fullName,
