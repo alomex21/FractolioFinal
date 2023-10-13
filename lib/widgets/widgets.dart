@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
-import 'package:fractoliotesting/models/user.dart' as model;
-import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
+import '../constant/routes.dart';
+import '../dialogs/error_dialog.dart';
+import '../models/user.dart' as model;
+import '../services/auth/auth_exceptions.dart';
+import '../services/auth/auth_service.dart';
 import 'package:string_capitalize/string_capitalize.dart';
 
 //BOTON PERFIL

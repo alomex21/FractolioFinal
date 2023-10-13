@@ -1,4 +1,4 @@
-import 'package:fractoliotesting/models/review.dart';
+import '../../models/review.dart';
 
 abstract class DatabaseService {
   Future<void> setReview(

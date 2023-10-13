@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/views/add_product.dart';
-import 'package:fractoliotesting/views/product_page.dart';
-import 'package:fractoliotesting/widgets/widgets.dart';
+import 'add_product.dart';
+import 'product_page.dart';
+import '../widgets/widgets.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});

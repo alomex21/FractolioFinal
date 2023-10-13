@@ -1,6 +1,6 @@
-import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
-import 'package:fractoliotesting/services/auth/auth_provider.dart';
-import 'package:fractoliotesting/services/auth/auth_user.dart';
+import '../services/auth/auth_exceptions.dart';
+import '../services/auth/auth_provider.dart';
+import '../services/auth/auth_user.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fractoliotesting/models/review.dart';
-import 'package:fractoliotesting/services/services/database_services.dart';
+import '../../models/review.dart';
+import 'database_services.dart';
 
 class FirestoreService implements DatabaseService {
   // Factory constructor

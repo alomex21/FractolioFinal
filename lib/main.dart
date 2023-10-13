@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
-import 'package:fractoliotesting/views/add_product.dart';
-import 'package:fractoliotesting/views/change_password.dart';
-import 'package:fractoliotesting/views/forgot_password.dart';
-import 'package:fractoliotesting/views/login.dart';
-import 'package:fractoliotesting/views/navigator_logic.dart';
-import 'package:fractoliotesting/views/profile_screen.dart';
-import 'package:fractoliotesting/views/register_view.dart';
-import 'package:fractoliotesting/views/verify_email_view.dart';
+import 'constant/routes.dart';
+import 'services/auth/auth_service.dart';
+import 'views/add_product.dart';
+import 'views/change_password.dart';
+import 'views/forgot_password.dart';
+import 'views/login.dart';
+import 'views/navigator_logic.dart';
+import 'views/profile_screen.dart';
+import 'views/register_view.dart';
+import 'views/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;

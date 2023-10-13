@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/views/product_page.dart';
+import 'product_page.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class CameraControllerQR extends StatefulWidget {
@@ -11,12 +11,18 @@ class CameraControllerQR extends StatefulWidget {
 
 class _CameraControllerQRState extends State<CameraControllerQR> {
   MobileScannerController cameraController = MobileScannerController();
+  Barcode? barcode;
 
   @override
   Widget build(BuildContext context) {
+    final scanwindow = Rect.fromCenter(
+        center: MediaQuery.of(context).size.center(Offset.zero),
+        width: 300,
+        height: 300);
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Mobile Scanner'),
+        title: const Text('Scan QR Code'),
         actions: [
           IconButton(
             color: Colors.white,
@@ -41,9 +47,15 @@ class _CameraControllerQRState extends State<CameraControllerQR> {
               builder: (context, state, child) {
                 switch (state as CameraFacing) {
                   case CameraFacing.front:
-                    return const Icon(Icons.camera_front);
+                    return const Icon(
+                      Icons.camera_front,
+                      color: Colors.grey,
+                    );
                   case CameraFacing.back:
-                    return const Icon(Icons.camera_rear);
+                    return const Icon(
+                      Icons.camera_rear,
+                      color: Colors.grey,
+                    );
                 }
               },
             ),
@@ -52,22 +64,61 @@ class _CameraControllerQRState extends State<CameraControllerQR> {
           ),
         ],
       ),
-      body: MobileScanner(
-        fit: BoxFit.contain,
-        controller: cameraController,
-        onDetect: (capture) {
-          final List<Barcode> barcodes = capture.barcodes;
-          final String? qrcode =
-              barcodes.isNotEmpty ? barcodes[0].rawValue : null;
-          debugPrint('Value of qr is: $qrcode');
-          cameraController.stop();
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => ProductsDetail(productId: qrcode),
+      body: Builder(builder: (context) {
+        return Stack(
+          children: [
+            MobileScanner(
+              fit: BoxFit.contain,
+              scanWindow: scanwindow,
+              controller: cameraController,
+              onDetect: (capture) {
+                final List<Barcode> barcodes = capture.barcodes;
+                final String? qrcode =
+                    barcodes.isNotEmpty ? barcodes[0].rawValue : null;
+                debugPrint('Value of qr is: $qrcode');
+                cameraController.stop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => ProductsDetail(productId: qrcode),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+            CustomPaint(
+              painter: ScannerOverlay(scanwindow),
+            ),
+          ],
+        );
+      }),
     );
+  }
+}
+
+class ScannerOverlay extends CustomPainter {
+  ScannerOverlay(this.scanWindow);
+
+  final Rect scanWindow;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final backgroundPath = Path()..addRect(Rect.largest);
+    final cutoutPath = Path()..addRect(scanWindow);
+
+    final backgroundPaint = Paint()
+      ..color = Colors.black.withOpacity(0.5)
+      ..style = PaintingStyle.fill
+      ..blendMode = BlendMode.dstOut;
+
+    final backgroundWithCutout = Path.combine(
+      PathOperation.difference,
+      backgroundPath,
+      cutoutPath,
+    );
+    canvas.drawPath(backgroundWithCutout, backgroundPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

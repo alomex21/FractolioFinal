@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

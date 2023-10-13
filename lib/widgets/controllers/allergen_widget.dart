@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
-import 'package:fractoliotesting/widgets/addproduct.dart';
+import '../../dialogs/error_dialog.dart';
+import '../addproduct.dart';
 
 class AllergenListView extends StatefulWidget {
   const AllergenListView(

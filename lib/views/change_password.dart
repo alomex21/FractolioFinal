@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
-import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
-import 'package:fractoliotesting/views/login.dart';
-import 'package:fractoliotesting/widgets/widgets.dart';
+import '../dialogs/error_dialog.dart';
+import '../services/auth/auth_exceptions.dart';
+import 'login.dart';
+import '../widgets/widgets.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});

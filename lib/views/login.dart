@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/widgets/widgets.dart';
+import '../constant/routes.dart';
+import '../widgets/widgets.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

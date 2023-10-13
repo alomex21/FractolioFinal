@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
-import 'package:fractoliotesting/models/addproduct.dart' as product;
+import '../dialogs/error_dialog.dart';
+import '../models/addproduct.dart' as product;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fractoliotesting/widgets/addproduct.dart';
-import 'package:fractoliotesting/widgets/controllers/allergen_widget.dart';
+import '../widgets/addproduct.dart';
+import '../widgets/controllers/allergen_widget.dart';
 
 class ProductInfoForm extends StatefulWidget {
   const ProductInfoForm({super.key});

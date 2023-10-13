@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
-import 'package:fractoliotesting/widgets/ratingsystem/starwidgets.dart';
+import '../services/auth/auth_service.dart';
+import '../widgets/ratingsystem/starwidgets.dart';
 
 class ProductReviewPageTwo extends StatelessWidget {
   ProductReviewPageTwo(

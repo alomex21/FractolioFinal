@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fractoliotesting/views/product_review.dart';
+import 'product_review.dart';
 
 class ProductsDetail extends StatelessWidget {
   const ProductsDetail({Key? key, required this.productId}) : super(key: key);

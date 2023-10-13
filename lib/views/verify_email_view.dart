@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fractoliotesting/constant/routes.dart';
-import 'package:fractoliotesting/services/auth/auth_service.dart';
+import '../constant/routes.dart';
+import '../services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({super.key});

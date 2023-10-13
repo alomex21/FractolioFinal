@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fractoliotesting/services/auth/auth_service.dart';
+import '../services/auth/auth_service.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
