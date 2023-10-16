@@ -1,12 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import '../../models/review.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/services/services/firestore_service.dart';
-//
 
 class AverageRating extends StatefulWidget {
   const AverageRating({super.key, required this.qrCodeString});
@@ -65,10 +61,10 @@ class ReviewInput extends StatefulWidget {
   final String userId;
 
   @override
-  State<ReviewInput> createState() => _ReviewInputState();
+  State<ReviewInput> createState() => ReviewInputState();
 }
 
-class _ReviewInputState extends State<ReviewInput> {
+class ReviewInputState extends State<ReviewInput> {
   FirestoreService dbService = FirestoreService();
   final _key = GlobalKey<FormState>();
 
@@ -78,8 +74,23 @@ class _ReviewInputState extends State<ReviewInput> {
 
   @override
   void initState() {
-    _fetchUserReview();
     super.initState();
+    _fetchUserReview();
+  }
+
+  Future<void> refreshUserReview() async {
+    setState(
+      () async {
+        final userReview =
+            await dbService.getUserReview(widget.qrCodeString!, widget.userId);
+        if (userReview != null) {
+          setState(() {
+            _currentRating = userReview.rating;
+            _currentReview = userReview.text;
+          });
+        }
+      },
+    );
   }
 
   Future<void> _fetchUserReview() async {
@@ -124,9 +135,7 @@ class _ReviewInputState extends State<ReviewInput> {
                   hintText: "Write your review here...",
                 ),
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty ||
-                      value == _currentReview) {
+                  if (value == null || value.isEmpty) {
                     return 'Please Enter a review';
                   }
                   return null;
