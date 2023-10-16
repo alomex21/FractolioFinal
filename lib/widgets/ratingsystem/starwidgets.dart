@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fractoliotesting/dialogs/error_dialog.dart';
 import '../../models/review.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fractoliotesting/services/services/firestore_service.dart';
@@ -69,6 +70,7 @@ class ReviewInput extends StatefulWidget {
 
 class _ReviewInputState extends State<ReviewInput> {
   FirestoreService dbService = FirestoreService();
+  final _key = GlobalKey<FormState>();
 
   double _currentRating = 0;
   String _currentReview = '';
@@ -112,45 +114,58 @@ class _ReviewInputState extends State<ReviewInput> {
                 });
               },
             ),
-            TextField(
-              onChanged: (value) {
-                _currentReview = value;
-              },
-              decoration: const InputDecoration(
-                hintText: "Write your review here...",
+            Form(
+              key: _key,
+              child: TextFormField(
+                onChanged: (value) {
+                  _currentReview = value;
+                },
+                decoration: const InputDecoration(
+                  hintText: "Write your review here...",
+                ),
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value == _currentReview) {
+                    return 'Please Enter a review';
+                  }
+                  return null;
+                },
               ),
             ),
             ElevatedButton(
               onPressed: _isLoading
                   ? null
                   : () async {
-                      setState(() {
-                        _isLoading = true;
-                        FocusScope.of(context).unfocus();
-                      });
-                      try {
-                        await dbService.setReview(widget.qrCodeString,
-                            widget.userId, _currentRating, _currentReview,
-                            merge: true);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Review submitted successfully!'),
-                                  backgroundColor: Colors.green));
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'An error occurred, please try again.'),
-                                  backgroundColor: Colors.red));
-                        }
-                      } finally {
+                      if (_key.currentState!.validate()) {
                         setState(() {
-                          _isLoading = false;
+                          _isLoading = true;
+                          FocusScope.of(context).unfocus();
                         });
+                        try {
+                          await dbService.setReview(widget.qrCodeString,
+                              widget.userId, _currentRating, _currentReview,
+                              merge: true);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text('Review submitted successfully!'),
+                                    backgroundColor: Colors.green));
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'An error occurred, please try again.'),
+                                    backgroundColor: Colors.red));
+                          }
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
                     },
               child: const Text('Submit Review'),
