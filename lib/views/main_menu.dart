@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/services/services/firestore_storage.dart';
 import 'add_product.dart';
 import 'product_page.dart';
 import '../widgets/widgets.dart';
@@ -57,8 +58,10 @@ class MainMenu extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          ProductsDetail(productId: '0R2bSVi2Dy6NmME4i3kN')));
+                      builder: (context) => ProductsDetail(
+                            productId: 'UqkWbaqGz02xKU4KYpPU',
+                            firebaseService: FirebaseService.instance,
+                          )));
                 },
                 child: const Text('Test Product Page')),
             TextButton(

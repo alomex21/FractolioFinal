@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/services/services/firestore_storage.dart';
 import 'product_page.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -79,7 +80,9 @@ class _CameraControllerQRState extends State<CameraControllerQR> {
                 cameraController.stop();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => ProductsDetail(productId: qrcode),
+                    builder: (context) => ProductsDetail(
+                        productId: qrcode,
+                        firebaseService: FirebaseService.instance),
                   ),
                 );
               },

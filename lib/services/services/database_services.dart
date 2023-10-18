@@ -12,4 +12,6 @@ abstract class DatabaseService {
   Stream<List<Review>> fetchProductReviews(String? productId);
 
   Future<Review?> getUserReview(String? productId, String userId);
+
+  //Stream<DocumentSnapshot> getProductStream(String? productId);
 }

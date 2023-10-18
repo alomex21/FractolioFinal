@@ -14,13 +14,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "1081635638594-gvd0ei1rvuqm7lnvusmabelep1sn3hi0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cl.fractolio.fractolioqr",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
           "client_id": "1081635638594-qq5rb8r04rvi1pqn9ubkeam8523lbmvi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAP7_ZADTlQc0PddQ5wUInH-RbAAX-vc4o"
+          "current_key": "AIzaSyCf_tTNwrw9vSkI4dAEFNaDIfcq3hPFf8I"
         }
       ],
       "services": {
@@ -43,12 +51,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1081635638594:android:f4b31fa91742fe3038ccdb",
+        "mobilesdk_app_id": "1:1081635638594:android:c8ca7490403939f038ccdb",
         "android_client_info": {
-          "package_name": "com.example.fractolio"
+          "package_name": "cl.fractolio.qrcoder"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1081635638594-3o9iv2oi74di9s1i7tr38v3h70oh85v9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cl.fractolio.qrcoder",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
         {
           "client_id": "1081635638594-qq5rb8r04rvi1pqn9ubkeam8523lbmvi.apps.googleusercontent.com",
           "client_type": 3
@@ -56,43 +72,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAP7_ZADTlQc0PddQ5wUInH-RbAAX-vc4o"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1081635638594-qq5rb8r04rvi1pqn9ubkeam8523lbmvi.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1081635638594-0eqheopnit2rphdlkubolb9c219fqcc4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fractolio"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1081635638594:android:470ce01885f54fb538ccdb",
-        "android_client_info": {
-          "package_name": "com.example.fractoliotesting"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1081635638594-qq5rb8r04rvi1pqn9ubkeam8523lbmvi.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAP7_ZADTlQc0PddQ5wUInH-RbAAX-vc4o"
+          "current_key": "AIzaSyCf_tTNwrw9vSkI4dAEFNaDIfcq3hPFf8I"
         }
       ],
       "services": {

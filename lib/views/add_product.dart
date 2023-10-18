@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fractoliotesting/widgets/controllers/submit_form.dart';
+import 'package:image_picker/image_picker.dart';
 import '../dialogs/error_dialog.dart';
-import '../models/addproduct.dart' as product;
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../widgets/addproduct.dart';
 import '../widgets/controllers/allergen_widget.dart';
 
@@ -28,6 +29,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   final Map<String, String> _nutritionalValues = {};
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _qrCodeController = TextEditingController();
+  ImagePicker picker = ImagePicker();
 
   @override
   void dispose() {
@@ -40,35 +42,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _nutritionalPropertyController.dispose();
     _nutritionalValueController.dispose();
   }
-
-/*   Widget _buildTextField(
-    TextEditingController controller,
-    String hintText, {
-    int? minLines,
-    int? maxLength,
-    bool showCounter = true,
-    TextAlign textAlign = TextAlign.left,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        maxLines: null,
-        minLines: minLines ?? 1,
-        maxLength: maxLength,
-        controller: controller,
-        textAlign: textAlign,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: hintText,
-          labelText: hintText,
-          counterText: showCounter ? null : '',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-      ),
-    );
-  } */
 
   Widget _buildAllergenListView() {
     return ListView.builder(
@@ -192,6 +165,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     );
   }
 
+/*
   Widget _submitButton() {
     return ElevatedButton(
       onPressed: _submitForm,
@@ -270,11 +244,21 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
           showErrorDialog(context, 'No internet access!');
         }
       }
-
-      //TODO: qr_code ingresar valor de su documento y de ahi crear imagen de qr y almacenar?
+      //TODO: qr_code enter value of your document and from there create qr image and store?
 
       // Clear the allergens and nutritional values lists
     }
+  }
+ */
+  File? _imageFile;
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    print('${pickedFile?.path}');
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
+    });
   }
 
   @override
@@ -294,6 +278,12 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 const Divider(),
+                IconButton(
+                    onPressed: (() => _pickImage()),
+                    icon: const Icon(Icons.add_a_photo_outlined)),
+                BuildTextField(
+                    controller: _imageURLController,
+                    hintText: 'Enter imageURL...'),
                 BuildTextField(
                   controller: _productNameController,
                   hintText: 'Enter product name...',
@@ -308,9 +298,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                   showCounter: true,
                   maxLength: 500,
                 ),
-                BuildTextField(
-                    controller: _imageURLController,
-                    hintText: 'Enter imageURL...'),
                 AllergenListView(
                     allergens: _allergens,
                     onRemoveAllergen: (index) {
@@ -331,7 +318,16 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                 _buildNutritionalListView(),
                 _addNutritionalRow(),
                 const Divider(),
-                _submitButton(),
+                SubmitForm(
+                    formkey: _formkey,
+                    productNameController: _productNameController,
+                    descriptionController: _descriptionController,
+                    allergens: _allergens,
+                    nutritionalValues: _nutritionalValues,
+                    qrCodeController: _qrCodeController,
+                    imageURLController: _imageURLController,
+                    mounted: mounted,
+                    imageFile: _imageFile),
               ],
             ),
           ),

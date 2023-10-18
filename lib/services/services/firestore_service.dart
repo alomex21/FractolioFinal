@@ -90,4 +90,12 @@ class FirestoreService implements DatabaseService {
       'text': reviewText,
     }, SetOptions(merge: merge));
   }
+
+  @override
+  Stream<DocumentSnapshot> getProductStream(String? productId) {
+    return _firebaseInstance
+        .collection('Products')
+        .doc(productId ?? 'UqkWbaqGz02xKU4KYpPU')
+        .snapshots();
+  }
 }

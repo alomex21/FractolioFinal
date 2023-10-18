@@ -1,27 +1,39 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:string_capitalize/string_capitalize.dart';
+import '../services/services/firestore_service.dart';
 import 'product_review.dart';
 import 'package:flutter/services.dart';
+import 'package:fractoliotesting/services/services/storage_services.dart';
 
 class ProductsDetail extends StatelessWidget {
-  ProductsDetail({Key? key, required this.productId}) : super(key: key) {
+  ProductsDetail(
+      {Key? key, required this.productId, required this.firebaseService})
+      : super(key: key) {
     assert(productId != null);
   }
 
   final String? productId;
+  final FirebaseServiceInterface? firebaseService;
+  final dbService = FirestoreService();
 
-  Stream<DocumentSnapshot> getProductStream() {
+/*   Stream<DocumentSnapshot> getProductStream() {
     return FirebaseFirestore.instance
         .collection('Products')
-        .doc(productId ?? '0R2bSVi2Dy6NmME4i3kN')
+        .doc(productId ?? 'UqkWbaqGz02xKU4KYpPU')
         .snapshots();
-  }
+  } */
 
   Widget buildProductDetail(
       AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
     final Map<String, dynamic> data =
         snapshot.data?.data() as Map<String, dynamic> ?? {};
+
+    List<Map<String, String>> keysAndTitles = [
+      {'key': 'product_name', 'title': 'Product Name'},
+      {'key': 'description', 'title': 'Description'},
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -29,12 +41,24 @@ class ProductsDetail extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            BuildListTile(
-                title: 'Product Name', value: data["product_name"] ?? ''),
-            BuildListTile(
-                title: 'Description', value: data["description"] ?? ''),
-            BuildListTile(title: 'Image URL', value: data["image_url"] ?? ''),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: keysAndTitles.length + 1, // +1 for the image
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return ImageBuilder(
+                      firebaseService: firebaseService, data: data);
+                } else {
+                  final key = keysAndTitles[index - 1]['key'];
+                  final title = keysAndTitles[index - 1]['title'];
+                  return BuildListTile(title: title!, value: data[key!] ?? '');
+                }
+              },
+            ),
             AllergensWidget(
                 title: "Allergens", allergens: data["allergens"] ?? ''),
             NutritionalValues(
@@ -76,7 +100,7 @@ class ProductsDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: getProductStream(),
+      stream: dbService.getProductStream(productId),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -88,10 +112,120 @@ class ProductsDetail extends StatelessWidget {
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Text('Product not found');
+          return const Text('Product not found!');
         }
 
-        return buildProductDetail(snapshot, context);
+        final Map<String, dynamic> data =
+            snapshot.data?.data() as Map<String, dynamic> ?? {};
+
+        List<Map<String, String>> keysAndTitles = [
+          {'key': 'product_name', 'title': 'Product Name'},
+          {'key': 'description', 'title': 'Description'},
+        ];
+        return BuildProductDetail(
+            data: data,
+            keysAndTitles: keysAndTitles,
+            firebaseService: firebaseService,
+            productId: productId);
+      },
+    );
+  }
+}
+
+class BuildProductDetail extends StatelessWidget {
+  const BuildProductDetail({
+    super.key,
+    required this.data,
+    required this.keysAndTitles,
+    required this.firebaseService,
+    required this.productId,
+  });
+
+  final Map<String, dynamic> data;
+  final List<Map<String, String>> keysAndTitles;
+  final FirebaseServiceInterface? firebaseService;
+  final String? productId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(data["product_name"] ?? "Default Product Name"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: keysAndTitles.length + 1, // +1 for the image
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return ImageBuilder(
+                      firebaseService: firebaseService, data: data);
+                } else {
+                  final key2 = keysAndTitles[index - 1]['key'];
+                  final title = keysAndTitles[index - 1]['title'];
+                  return BuildListTile(title: title!, value: data[key2!] ?? '');
+                }
+              },
+            ),
+            AllergensWidget(
+                title: "Allergens", allergens: data["allergens"] ?? ''),
+            NutritionalValues(
+                title: "Nutritional Values",
+                nutritionalValues: data["nutritional_values"] ?? ''),
+            TextbuttonReview(data: data, qrCodeString: productId),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImageBuilder extends StatelessWidget {
+  const ImageBuilder({
+    super.key,
+    required this.firebaseService,
+    required this.data,
+  });
+
+  final FirebaseServiceInterface? firebaseService;
+  final Map<String, dynamic> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String>(
+      future: firebaseService?.getImageUrl(data["qr_code"] ?? 'default_name'),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Center(
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  width: 200,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 2.0),
+                      borderRadius: BorderRadius.circular(12.0)),
+                  child: Image.network(
+                    fit: BoxFit.cover,
+                    snapshot.data!,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
       },
     );
   }
@@ -104,15 +238,18 @@ class AllergensWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: ListTile(
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: allergens?.map((allergen) {
-                return Text(allergen.toString());
-              }).toList() ??
-              [],
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: InkWell(
+        child: ListTile(
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: allergens?.map((allergen) {
+                  return Text(allergen.toString());
+                }).toList() ??
+                [],
+          ),
         ),
       ),
     );
@@ -127,26 +264,26 @@ class NutritionalValues extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () {
-        _copyToClipboard(context, nutritionalValues);
-      },
-      child: ListTile(
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: nutritionalValues?.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Column(
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: InkWell(
+        onLongPress: () {
+          _copyToClipboard(context, nutritionalValues);
+        },
+        child: ListTile(
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: nutritionalValues?.entries.map((entry) {
+                  return Column(
                     children: [
                       Text(
                           "-${entry.key.capitalize()}: ${entry.value.toString()}"),
                     ],
-                  ),
-                );
-              }).toList() ??
-              [],
+                  );
+                }).toList() ??
+                [],
+          ),
         ),
       ),
     );
@@ -189,13 +326,16 @@ class BuildListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () {
-        _copyToClipboard(context, value);
-      },
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(value ?? ""),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: InkWell(
+        onLongPress: () {
+          _copyToClipboard(context, value);
+        },
+        child: ListTile(
+          title: Text(title),
+          subtitle: Text(value ?? ""),
+        ),
       ),
     );
   }
