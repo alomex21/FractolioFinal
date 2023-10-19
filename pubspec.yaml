@@ -9,9 +9,9 @@ environment:
 dependencies:
   camera: ^0.10.5
   cloud_firestore: ^4.8.5
-  connectivity_plus: ^4.0.2
+  connectivity_plus: ^5.0.1
   dependency_validator: ^3.2.3
-  firebase_auth: ^4.5.0
+  firebase_auth: ^4.11.0
   firebase_core: ^2.11.0
   firebase_storage: ^11.2.6
   flutter:
@@ -19,11 +19,11 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   image_picker: ^1.0.4
   mobile_scanner: ^3.4.1
-  permission_handler: ^10.2.0
+  permission_handler: ^11.0.1
   string_capitalize: ^0.0.10
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
   test: ^1.24.1
