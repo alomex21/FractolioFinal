@@ -20,6 +20,7 @@ dependencies:
   image_picker: ^1.0.4
   mobile_scanner: ^3.4.1
   permission_handler: ^11.0.1
+  provider: ^6.0.5
   string_capitalize: ^0.0.10
 
 dev_dependencies:

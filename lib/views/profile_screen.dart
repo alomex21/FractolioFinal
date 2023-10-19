@@ -5,7 +5,7 @@ import 'package:fractoliotesting/views/change_password.dart';
 import 'package:fractoliotesting/widgets/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   void _didPushButton(BuildContext context) {
     Navigator.of(context).pushReplacementNamed('/navigator');
@@ -29,8 +29,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    FullnameWidget(),
-                    const Text('emailaddress'),
+                    const FullnameWidget(),
+                    const EmailWidget(),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {

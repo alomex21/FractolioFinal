@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_cast
+
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/services/services/firestore_storage.dart';
 import 'product_page.dart';

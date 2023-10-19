@@ -34,6 +34,7 @@ class MainMenu extends StatelessWidget {
       return null;
     }
   } */
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +55,7 @@ class MainMenu extends StatelessWidget {
                 }
               },
             ), */
-            FullnameWidget(),
+            const FullnameWidget(),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(

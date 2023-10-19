@@ -43,7 +43,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     _nutritionalValueController.dispose();
   }
 
-  Widget _buildAllergenListView() {
+/*   Widget _buildAllergenListView() {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: _allergens.length,
@@ -93,7 +93,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
         ),
       ],
     );
-  }
+  } */
 
   Widget _buildNutritionalListView() {
     return ListView.builder(
@@ -253,7 +253,7 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   File? _imageFile;
   Future<void> _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    print('${pickedFile?.path}');
+    //print('${pickedFile?.path}');
     setState(() {
       if (pickedFile != null) {
         _imageFile = File(pickedFile.path);

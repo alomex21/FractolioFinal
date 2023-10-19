@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'constant/routes.dart';
+import 'models/providers/user_provider.dart';
 import 'services/auth/auth_service.dart';
-import 'views/add_product.dart';
-import 'views/change_password.dart';
-import 'views/forgot_password.dart';
 import 'views/login.dart';
 import 'views/navigator_logic.dart';
-import 'views/profile_screen.dart';
-import 'views/register_view.dart';
 import 'views/verify_email_view.dart';
 
-void main() {
+/* void main() {
   WidgetsFlutterBinding.ensureInitialized;
   runApp(
     MaterialApp(
@@ -29,6 +26,37 @@ void main() {
       },
     ),
   );
+} */
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized;
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => EmailProvider(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData.light(useMaterial3: true),
+        home: const HomePage(),
+        routes: buildRoutes(),
+      ),
+    );
+  }
 }
 
 class HomePage extends StatelessWidget {

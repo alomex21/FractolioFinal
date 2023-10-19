@@ -91,7 +91,6 @@ class FirestoreService implements DatabaseService {
     }, SetOptions(merge: merge));
   }
 
-  @override
   Stream<DocumentSnapshot> getProductStream(String? productId) {
     return _firebaseInstance
         .collection('Products')

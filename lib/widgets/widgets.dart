@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constant/routes.dart';
 import '../dialogs/error_dialog.dart';
+import '../models/providers/user_provider.dart';
 import '../models/user.dart' as model;
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/auth_service.dart';
@@ -59,7 +61,7 @@ class BotonPerfil extends StatelessWidget {
 
 //EDITAR TEXT DE BOTON PERFIL
 class EditText extends StatelessWidget {
-  const EditText(this.displayText, {Key? key}) : super(key: key);
+  const EditText(this.displayText, {super.key});
 
   final String displayText;
 
@@ -149,6 +151,36 @@ class LoginState extends StatelessWidget {
 }
 
 class FullnameWidget extends StatelessWidget {
+  const FullnameWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
+    //print("Fetched User: ${userProvider.userName}");
+    if (userProvider.userName == null) {
+      return const CircularProgressIndicator();
+    } else {
+      return Text(userProvider.userName!);
+    }
+  }
+}
+
+class EmailWidget extends StatelessWidget {
+  const EmailWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final EmailProvider emailprovider = Provider.of<EmailProvider>(context);
+    print("Email Widget ${emailprovider.email}");
+    if (emailprovider.email == null) {
+      return const CircularProgressIndicator();
+    } else {
+      return Text(emailprovider.email!);
+    }
+  }
+}
+
+/* class FullnameWidget extends StatelessWidget {
   FullnameWidget({super.key});
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -185,7 +217,7 @@ class FullnameWidget extends StatelessWidget {
       },
     );
   }
-}
+} */
 
 class RegisterState extends StatelessWidget {
   const RegisterState({

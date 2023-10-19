@@ -25,10 +25,12 @@ class VerifyEmailView extends StatelessWidget {
         TextButton(
           onPressed: () async {
             await AuthService.firebase().logOut();
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              registerRoute,
-              (route) => false,
-            );
+            if (context.mounted) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                registerRoute,
+                (route) => false,
+              );
+            }
           },
           child: const Text('Restart'),
         )

@@ -1,8 +1,5 @@
 // firebase_service.dart
-
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'storage_services.dart';
 
 class FirebaseService implements FirebaseServiceInterface {

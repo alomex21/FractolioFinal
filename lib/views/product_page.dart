@@ -9,8 +9,7 @@ import 'package:fractoliotesting/services/services/storage_services.dart';
 
 class ProductsDetail extends StatelessWidget {
   ProductsDetail(
-      {Key? key, required this.productId, required this.firebaseService})
-      : super(key: key) {
+      {super.key, required this.productId, required this.firebaseService}) {
     assert(productId != null);
   }
 
@@ -28,7 +27,7 @@ class ProductsDetail extends StatelessWidget {
   Widget buildProductDetail(
       AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
     final Map<String, dynamic> data =
-        snapshot.data?.data() as Map<String, dynamic> ?? {};
+        snapshot.data?.data() as Map<String, dynamic>;
 
     List<Map<String, String>> keysAndTitles = [
       {'key': 'product_name', 'title': 'Product Name'},
@@ -116,7 +115,7 @@ class ProductsDetail extends StatelessWidget {
         }
 
         final Map<String, dynamic> data =
-            snapshot.data?.data() as Map<String, dynamic> ?? {};
+            snapshot.data?.data() as Map<String, dynamic>;
 
         List<Map<String, String>> keysAndTitles = [
           {'key': 'product_name', 'title': 'Product Name'},
