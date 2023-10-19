@@ -11,7 +11,7 @@ dependencies:
   cloud_firestore: ^4.8.5
   connectivity_plus: ^5.0.1
   dependency_validator: ^3.2.3
-  firebase_auth: ^4.11.0
+  firebase_auth: ^4.11.1
   firebase_core: ^2.11.0
   firebase_storage: ^11.2.6
   flutter:
