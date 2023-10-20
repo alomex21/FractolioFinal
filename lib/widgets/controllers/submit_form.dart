@@ -29,16 +29,16 @@ class SubmitForm extends StatefulWidget {
         _imageURLController = imageURLController,
         _imageFile = imageFile;
 
-  final GlobalKey<FormState> _formkey;
-  final TextEditingController _productNameController;
-  final TextEditingController _descriptionController;
-  final List<String> _allergens;
-  final Map<String, String> _nutritionalValues;
-  final TextEditingController _qrCodeController;
-  final TextEditingController _imageURLController;
-  final File? _imageFile;
-
   final bool mounted;
+
+  final List<String> _allergens;
+  final TextEditingController _descriptionController;
+  final GlobalKey<FormState> _formkey;
+  final File? _imageFile;
+  final TextEditingController _imageURLController;
+  final Map<String, String> _nutritionalValues;
+  final TextEditingController _productNameController;
+  final TextEditingController _qrCodeController;
 
   @override
   State<SubmitForm> createState() => _SubmitFormState();

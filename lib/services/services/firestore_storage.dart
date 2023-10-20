@@ -7,7 +7,9 @@ class FirebaseService implements FirebaseServiceInterface {
   factory FirebaseService() {
     return instance;
   }
+
   FirebaseService._internal();
+
   static final FirebaseService instance = FirebaseService._internal();
 
   final FirebaseStorage _firebaseInstance = FirebaseStorage.instance;

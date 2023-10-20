@@ -15,10 +15,99 @@ class ProductInfoForm extends StatefulWidget {
 }
 
 class _ProductInfoFormState extends State<ProductInfoForm> {
+  ImagePicker picker = ImagePicker();
+
   final TextEditingController _allergenController = TextEditingController();
   final List<String> _allergens = [];
   final TextEditingController _descriptionController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+/*
+  Widget _submitButton() {
+    return ElevatedButton(
+      onPressed: _submitForm,
+      child: const Text('Submit'),
+    );
+  }
+
+  void _submitForm() async {
+    if (_formkey.currentState!.validate()) {
+      // Check if any of the fields or lists are empty
+      if (_productNameController.text.isEmpty ||
+          //_qrCodeController.text.isEmpty ||
+          _descriptionController.text.isEmpty ||
+          //_imageURLController.text.isEmpty ||
+          _allergens.isEmpty ||
+          _nutritionalValues.isEmpty) {
+        showErrorDialog(context, "All fields have to be filled!");
+        return; // Exit the function without submitting the data
+      }
+
+      product.AddProduct productfinal = product.AddProduct(
+          _productNameController.text,
+          _qrCodeController.text,
+          _descriptionController.text,
+          _imageURLController.text,
+          _allergens,
+          _nutritionalValues);
+
+      CollectionReference products =
+          FirebaseFirestore.instance.collection('Products');
+      final connectivity = await (Connectivity().checkConnectivity());
+      if (connectivity != ConnectivityResult.none) {
+        try {
+          await products.add(productfinal.toJson()).then(
+            (value) {
+              String idref = value.id;
+              products
+                  .doc(idref)
+                  .update(
+                    {
+                      "qr_code": idref,
+                    },
+                  )
+                  .whenComplete(
+                    () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Product Uploaded',
+                        ),
+                      ),
+                    ),
+                  )
+                  .then((value) {
+                    // Clear the fields
+                    _productNameController.clear();
+                    _qrCodeController.clear();
+                    _descriptionController.clear();
+                    _imageURLController.clear();
+                    //_allergenController.clear();
+                    //_nutritionalPropertyController.clear();
+                    //_nutritionalValueController.clear();
+                    setState(() {
+                      _allergens.clear();
+                      _nutritionalValues.clear();
+                    });
+                  });
+            },
+            onError: (e) => showErrorDialog(
+                context, 'Failed with error "${e.code}": "${e.message}"'),
+          );
+        } on FirebaseException catch (e) {
+          print('Failed with error "${e.code}": "${e.message}"');
+        }
+      } else {
+        if (mounted) {
+          showErrorDialog(context, 'No internet access!');
+        }
+      }
+      //TODO: qr_code enter value of your document and from there create qr image and store?
+
+      // Clear the allergens and nutritional values lists
+    }
+  }
+ */
+  File? _imageFile;
+
   final TextEditingController _imageURLController = TextEditingController();
   final TextEditingController _nutritionalPropertyController =
       TextEditingController();
@@ -29,7 +118,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   final Map<String, String> _nutritionalValues = {};
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _qrCodeController = TextEditingController();
-  ImagePicker picker = ImagePicker();
 
   @override
   void dispose() {
@@ -165,92 +253,6 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
     );
   }
 
-/*
-  Widget _submitButton() {
-    return ElevatedButton(
-      onPressed: _submitForm,
-      child: const Text('Submit'),
-    );
-  }
-
-  void _submitForm() async {
-    if (_formkey.currentState!.validate()) {
-      // Check if any of the fields or lists are empty
-      if (_productNameController.text.isEmpty ||
-          //_qrCodeController.text.isEmpty ||
-          _descriptionController.text.isEmpty ||
-          //_imageURLController.text.isEmpty ||
-          _allergens.isEmpty ||
-          _nutritionalValues.isEmpty) {
-        showErrorDialog(context, "All fields have to be filled!");
-        return; // Exit the function without submitting the data
-      }
-
-      product.AddProduct productfinal = product.AddProduct(
-          _productNameController.text,
-          _qrCodeController.text,
-          _descriptionController.text,
-          _imageURLController.text,
-          _allergens,
-          _nutritionalValues);
-
-      CollectionReference products =
-          FirebaseFirestore.instance.collection('Products');
-      final connectivity = await (Connectivity().checkConnectivity());
-      if (connectivity != ConnectivityResult.none) {
-        try {
-          await products.add(productfinal.toJson()).then(
-            (value) {
-              String idref = value.id;
-              products
-                  .doc(idref)
-                  .update(
-                    {
-                      "qr_code": idref,
-                    },
-                  )
-                  .whenComplete(
-                    () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Product Uploaded',
-                        ),
-                      ),
-                    ),
-                  )
-                  .then((value) {
-                    // Clear the fields
-                    _productNameController.clear();
-                    _qrCodeController.clear();
-                    _descriptionController.clear();
-                    _imageURLController.clear();
-                    //_allergenController.clear();
-                    //_nutritionalPropertyController.clear();
-                    //_nutritionalValueController.clear();
-                    setState(() {
-                      _allergens.clear();
-                      _nutritionalValues.clear();
-                    });
-                  });
-            },
-            onError: (e) => showErrorDialog(
-                context, 'Failed with error "${e.code}": "${e.message}"'),
-          );
-        } on FirebaseException catch (e) {
-          print('Failed with error "${e.code}": "${e.message}"');
-        }
-      } else {
-        if (mounted) {
-          showErrorDialog(context, 'No internet access!');
-        }
-      }
-      //TODO: qr_code enter value of your document and from there create qr image and store?
-
-      // Clear the allergens and nutritional values lists
-    }
-  }
- */
-  File? _imageFile;
   Future<void> _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     //print('${pickedFile?.path}');

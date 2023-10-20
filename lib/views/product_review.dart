@@ -9,10 +9,12 @@ class ProductReviewPageTwo extends StatelessWidget {
   final String productName;
   final String? qrCodeString;
 
-  final GlobalKey<RefreshIndicatorState> _refreshpage =
-      GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ChildrenListState> _childrenListKey =
       GlobalKey<ChildrenListState>();
+
+  final GlobalKey<RefreshIndicatorState> _refreshpage =
+      GlobalKey<RefreshIndicatorState>();
+
   String get userId => AuthService.firebase().currentUser!.id;
 
   @override
@@ -58,6 +60,7 @@ class ProductReviewPageTwo extends StatelessWidget {
 
 class ChildrenList extends StatefulWidget {
   const ChildrenList({super.key, this.qrCodeString, required this.userId});
+
   final String? qrCodeString;
   final String userId;
 

@@ -1,19 +1,20 @@
-// file: 'user_provider.dart'
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class UserProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  User? _currentUser;
-  String? _userName;
-
   UserProvider() {
     _currentUser = FirebaseAuth.instance.currentUser;
     if (_currentUser != null) {
       _fetchFullName();
     }
   }
+
+  User? _currentUser;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? _userName;
+
+  String? get userName => _userName;
 
   Future<void> _fetchFullName() async {
     if (_currentUser == null) return;
@@ -28,16 +29,16 @@ class UserProvider with ChangeNotifier {
       throw Exception('Failed to fetch full name');
     }
   }
-
-  String? get userName => _userName;
 }
 
 class EmailProvider with ChangeNotifier {
-  late String _userEmail;
   EmailProvider() {
     _userEmail = FirebaseAuth.instance.currentUser!.email!;
     //print("Email provider: ${_userEmail}");
     notifyListeners();
   }
+
+  late String _userEmail;
+
   String? get email => _userEmail;
 }

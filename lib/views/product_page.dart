@@ -13,16 +13,9 @@ class ProductsDetail extends StatelessWidget {
     assert(productId != null);
   }
 
-  final String? productId;
-  final FirebaseServiceInterface? firebaseService;
   final dbService = FirestoreService();
-
-/*   Stream<DocumentSnapshot> getProductStream() {
-    return FirebaseFirestore.instance
-        .collection('Products')
-        .doc(productId ?? 'UqkWbaqGz02xKU4KYpPU')
-        .snapshots();
-  } */
+  final FirebaseServiceInterface? firebaseService;
+  final String? productId;
 
   Widget buildProductDetail(
       AsyncSnapshot<DocumentSnapshot> snapshot, BuildContext context) {
@@ -96,6 +89,13 @@ class ProductsDetail extends StatelessWidget {
     );
   }
 
+/*   Stream<DocumentSnapshot> getProductStream() {
+    return FirebaseFirestore.instance
+        .collection('Products')
+        .doc(productId ?? 'UqkWbaqGz02xKU4KYpPU')
+        .snapshots();
+  } */
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -141,8 +141,8 @@ class BuildProductDetail extends StatelessWidget {
   });
 
   final Map<String, dynamic> data;
-  final List<Map<String, String>> keysAndTitles;
   final FirebaseServiceInterface? firebaseService;
+  final List<Map<String, String>> keysAndTitles;
   final String? productId;
 
   @override
@@ -191,8 +191,8 @@ class ImageBuilder extends StatelessWidget {
     required this.data,
   });
 
-  final FirebaseServiceInterface? firebaseService;
   final Map<String, dynamic> data;
+  final FirebaseServiceInterface? firebaseService;
 
   @override
   Widget build(BuildContext context) {
@@ -231,9 +231,10 @@ class ImageBuilder extends StatelessWidget {
 }
 
 class AllergensWidget extends StatelessWidget {
-  final String title;
-  final List? allergens;
   const AllergensWidget({super.key, this.allergens, required this.title});
+
+  final List? allergens;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -256,10 +257,11 @@ class AllergensWidget extends StatelessWidget {
 }
 
 class NutritionalValues extends StatelessWidget {
-  final String title;
-  final Map<String, dynamic>? nutritionalValues;
   const NutritionalValues(
       {super.key, required this.title, this.nutritionalValues});
+
+  final Map<String, dynamic>? nutritionalValues;
+  final String title;
 
   @override
   Widget build(BuildContext context) {

@@ -66,11 +66,11 @@ class ReviewInput extends StatefulWidget {
 
 class ReviewInputState extends State<ReviewInput> {
   FirestoreService dbService = FirestoreService();
-  final _key = GlobalKey<FormState>();
 
   double _currentRating = 0;
   String _currentReview = '';
   bool _isLoading = false;
+  final _key = GlobalKey<FormState>();
 
   @override
   void initState() {

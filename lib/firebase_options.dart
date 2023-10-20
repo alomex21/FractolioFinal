@@ -15,43 +15,6 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
-  static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
-        return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      default:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
-        );
-    }
-  }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDs98SNSMd15Gx1Cmqxj3AgxJ683LPMN7Y',
-    appId: '1:1081635638594:web:fe8124448d14134138ccdb',
-    messagingSenderId: '1081635638594',
-    projectId: 'fractolio-qrcoder',
-    authDomain: 'fractolio-qrcoder.firebaseapp.com',
-    storageBucket: 'fractolio-qrcoder.appspot.com',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCf_tTNwrw9vSkI4dAEFNaDIfcq3hPFf8I',
     appId: '1:1081635638594:android:470ce01885f54fb538ccdb',
@@ -79,4 +42,41 @@ class DefaultFirebaseOptions {
     iosClientId: '1081635638594-6gt23mff5a6ubco3ug4l585k6uke6lek.apps.googleusercontent.com',
     iosBundleId: 'com.example.fractoliotesting',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDs98SNSMd15Gx1Cmqxj3AgxJ683LPMN7Y',
+    appId: '1:1081635638594:web:fe8124448d14134138ccdb',
+    messagingSenderId: '1081635638594',
+    projectId: 'fractolio-qrcoder',
+    authDomain: 'fractolio-qrcoder.firebaseapp.com',
+    storageBucket: 'fractolio-qrcoder.appspot.com',
+  );
+
+  static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return android;
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.macOS:
+        return macos;
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      default:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions are not supported for this platform.',
+        );
+    }
+  }
 }
