@@ -30,47 +30,131 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: Colors.grey[300],
+      /* appBar: AppBar(
         title: const Text('Login'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'Enter Email here'),
-              controller: _email,
-              enableSuggestions: false,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
+      ), */
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                const Icon(
+                  Icons.lock,
+                  size: 100,
+                ),
+                Text(
+                  'Welcome! Please fill the form below to login',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                /* Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintText: 'Enter Email here',
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        fillColor: Colors.grey.shade200,
+                        filled: true),
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ), */
+
+                MyTextField(
+                  loginorpassword: _email,
+                  autocorrect: false,
+                  enableSuggestion: false,
+                  keyboardType: TextInputType.emailAddress,
+                  hintText: 'Enter Email here',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 25),
+                MyTextField(
+                  loginorpassword: _password,
+                  hintText: 'Enter password here',
+                  obscureText: true,
+                  enableSuggestion: false,
+                  autocorrect: false,
+                  keyboardType: TextInputType.text,
+                ),
+
+                /* Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintText: 'Enter password here',
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        fillColor: Colors.grey.shade200,
+                        filled: true),
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    controller: _password,
+                  ),
+                ), */
+                const SizedBox(height: 10),
+                //Login
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(forgotPassword);
+                          },
+                          child: Text(
+                            'I forgot my password',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                LoginState(
+                  email: _email,
+                  password: _password,
+                  mounted: mounted,
+                ),
+                const SizedBox(height: 10),
+                const Divider(thickness: 0.5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Not registered yet?'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            registerRoute, (route) => true);
+                      },
+                      child: const Text('Register here!',
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            TextFormField(
-              decoration:
-                  const InputDecoration(hintText: 'Enter password here'),
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              controller: _password,
-            ),
-            //Login
-            LoginState(
-              email: _email,
-              password: _password,
-              mounted: mounted,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(registerRoute, (route) => true);
-              },
-              child: const Text('Not registered yet? Register here!'),
-            ),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(forgotPassword);
-                },
-                child: const Text('I forgot my password')),
-          ],
+          ),
         ),
       ),
     );

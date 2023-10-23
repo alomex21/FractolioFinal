@@ -94,58 +94,70 @@ class LoginState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () async {
-        FocusScope.of(context).unfocus();
-        final email = _email.text;
-        final password = _password.text;
-        try {
-          await AuthService.firebase().logIn(
-            email: email,
-            password: password,
-          );
-          final user = AuthService.firebase().currentUser;
-          if (user?.isEmailVerified ?? false) {
-            //user verified
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 25.0),
+      decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadiusDirectional.circular(8)),
+      child: TextButton(
+        onPressed: () async {
+          FocusScope.of(context).unfocus();
+          final email = _email.text;
+          final password = _password.text;
+          try {
+            await AuthService.firebase().logIn(
+              email: email,
+              password: password,
+            );
+            final user = AuthService.firebase().currentUser;
+            if (user?.isEmailVerified ?? false) {
+              //user verified
+              if (mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  navigator,
+                  (route) => false,
+                );
+              }
+            } else {
+              //Not verified yet
+              if (mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  verifyEmailRoute,
+                  (route) => false,
+                );
+              }
+            }
+          } on UserNotFoundAuthException {
             if (mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                navigator,
-                (route) => false,
+              await showErrorDialog(
+                context,
+                "User not found",
               );
             }
-          } else {
-            //Not verified yet
+          } on WrongPasswordAuthException {
             if (mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                verifyEmailRoute,
-                (route) => false,
+              await showErrorDialog(
+                context,
+                "Wrong credentials",
+              );
+            }
+          } on GenericAuthException {
+            if (mounted) {
+              await showErrorDialog(
+                context,
+                'Authentication Error',
               );
             }
           }
-        } on UserNotFoundAuthException {
-          if (mounted) {
-            await showErrorDialog(
-              context,
-              "User not found",
-            );
-          }
-        } on WrongPasswordAuthException {
-          if (mounted) {
-            await showErrorDialog(
-              context,
-              "Wrong credentials",
-            );
-          }
-        } on GenericAuthException {
-          if (mounted) {
-            await showErrorDialog(
-              context,
-              'Authentication Error',
-            );
-          }
-        }
-      },
-      child: const Text('Login'),
+        },
+        child: const Center(
+            child: Text(
+          'Sign In',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+        )),
+      ),
     );
   }
 }
@@ -312,6 +324,51 @@ class RegisterState extends StatelessWidget {
             },
             child: const Text('Already registered? Login Here!'))
       ],
+    );
+  }
+}
+
+class MyTextField extends StatelessWidget {
+  const MyTextField(
+      {super.key,
+      required this.loginorpassword,
+      required this.hintText,
+      required this.obscureText,
+      required this.enableSuggestion,
+      required this.autocorrect,
+      this.keyboardType});
+
+  final TextEditingController loginorpassword;
+  final String hintText;
+  final bool obscureText;
+  final bool enableSuggestion;
+  final bool autocorrect;
+  final TextInputType? keyboardType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: hintText,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400),
+          ),
+          fillColor: Colors.grey.shade200,
+          filled: true,
+          hintStyle: TextStyle(color: Colors.grey[500]),
+        ),
+        controller: loginorpassword,
+        enableSuggestions: enableSuggestion,
+        autocorrect: autocorrect,
+        keyboardType: keyboardType,
+      ),
     );
   }
 }
