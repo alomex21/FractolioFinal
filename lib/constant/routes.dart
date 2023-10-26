@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/views/register_view2.dart';
 
 import '../views/add_product.dart';
 import '../views/change_password.dart';
@@ -11,6 +12,9 @@ import '../views/verify_email_view.dart';
 
 const String loginRoute = '/login';
 const String registerRoute = '/register';
+//NUEVO REGISTER
+const String registerRoute2 = '/register2';
+
 const String verifyEmailRoute = '/verify';
 const String navigator = '/menu';
 const String editProfle = '/profile';
@@ -27,7 +31,8 @@ Map<String, WidgetBuilder> buildRoutes() {
     editProfle: (context) => const ProfileScreen(),
     changePassword: (context) => const EditProfile(),
     forgotPassword: (context) => const ForgotPasswordView(),
-    addProduct: (context) => const ProductInfoForm()
+    addProduct: (context) => const ProductInfoForm(),
+    registerRoute2: (context) => const RegisterPage2(),
   };
 }
 /* const loginRoute = '/login/';

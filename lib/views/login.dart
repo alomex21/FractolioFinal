@@ -34,21 +34,20 @@ class _LoginViewState extends State<LoginView> {
       /* appBar: AppBar(
         title: const Text('Login'),
       ), */
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Center(
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
+                Image.asset('./lib/images/fractolio_logo.jpg', height: 200),
                 Text(
                   'Welcome! Please fill the form below to login',
                   style: TextStyle(color: Colors.grey[700], fontSize: 16),
                 ),
                 const SizedBox(height: 20),
+
                 /* Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: TextFormField(
@@ -72,7 +71,7 @@ class _LoginViewState extends State<LoginView> {
                 ), */
 
                 MyTextField(
-                  loginorpassword: _email,
+                  loginorpasswordorusername: _email,
                   autocorrect: false,
                   enableSuggestion: false,
                   keyboardType: TextInputType.emailAddress,
@@ -81,7 +80,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 25),
                 MyTextField(
-                  loginorpassword: _password,
+                  loginorpasswordorusername: _password,
                   hintText: 'Enter password here',
                   obscureText: true,
                   enableSuggestion: false,
@@ -140,15 +139,24 @@ class _LoginViewState extends State<LoginView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Not registered yet?'),
+                    Text(
+                      'Not registered yet?',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            registerRoute, (route) => true);
+                            registerRoute2, (route) => true);
                       },
-                      child: const Text('Register here!',
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Register here!',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),

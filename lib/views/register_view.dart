@@ -36,6 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
         title: const Text('Register'),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextFormField(
             decoration: const InputDecoration(hintText: 'Enter Username here'),
@@ -44,6 +45,7 @@ class _RegisterViewState extends State<RegisterView> {
             autocorrect: false,
             keyboardType: TextInputType.name,
           ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(hintText: 'Enter Email here'),
             controller: _email,
@@ -51,6 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
           ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(hintText: 'Enter password here'),
             controller: _password,
@@ -58,6 +61,7 @@ class _RegisterViewState extends State<RegisterView> {
             enableSuggestions: false,
             autocorrect: false,
           ),
+          const SizedBox(height: 10),
           RegisterState(
             email: _email,
             password: _password,

@@ -102,6 +102,11 @@ class LoginState extends StatelessWidget {
           borderRadius: BorderRadiusDirectional.circular(8)),
       child: TextButton(
         onPressed: () async {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const Center(child: CircularProgressIndicator());
+              });
           FocusScope.of(context).unfocus();
           final email = _email.text;
           final password = _password.text;
@@ -114,6 +119,7 @@ class LoginState extends StatelessWidget {
             if (user?.isEmailVerified ?? false) {
               //user verified
               if (mounted) {
+                Navigator.pop(context);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   navigator,
                   (route) => false,
@@ -122,14 +128,24 @@ class LoginState extends StatelessWidget {
             } else {
               //Not verified yet
               if (mounted) {
+                Navigator.pop(context);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   verifyEmailRoute,
                   (route) => false,
                 );
               }
             }
+          } on InvalidEmailAuthException {
+            if (mounted) {
+              Navigator.pop(context);
+              await showErrorDialog(
+                context,
+                "Invalid Email",
+              );
+            }
           } on UserNotFoundAuthException {
             if (mounted) {
+              Navigator.pop(context);
               await showErrorDialog(
                 context,
                 "User not found",
@@ -137,6 +153,7 @@ class LoginState extends StatelessWidget {
             }
           } on WrongPasswordAuthException {
             if (mounted) {
+              Navigator.pop(context);
               await showErrorDialog(
                 context,
                 "Wrong credentials",
@@ -144,6 +161,7 @@ class LoginState extends StatelessWidget {
             }
           } on GenericAuthException {
             if (mounted) {
+              Navigator.pop(context);
               await showErrorDialog(
                 context,
                 'Authentication Error',
@@ -155,7 +173,10 @@ class LoginState extends StatelessWidget {
             child: Text(
           'Sign In',
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         )),
       ),
     );
@@ -231,6 +252,7 @@ class EmailWidget extends StatelessWidget {
   }
 } */
 
+//REGISTER BUTTON
 class RegisterState extends StatelessWidget {
   const RegisterState({
     super.key,
@@ -252,77 +274,90 @@ class RegisterState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;
-            final fullname = _username.text;
-            final fullnamecapital = fullname.capitalizeEach();
-            try {
-              await AuthService.firebase()
-                  .createUser(email: email, password: password);
-              AuthService.firebase().sendEmailVerification();
-            } on WeakPasswordAuthException {
-              if (mounted) {
-                await showErrorDialog(
-                  context,
-                  'Weak Password',
-                );
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadiusDirectional.circular(8)),
+          child: TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+              final fullname = _username.text;
+              final fullnamecapital = fullname.capitalizeEach();
+              try {
+                await AuthService.firebase()
+                    .createUser(email: email, password: password);
+                AuthService.firebase().sendEmailVerification();
+              } on WeakPasswordAuthException {
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Weak Password',
+                  );
+                }
+              } on EmailAlreadyInUseAuthException {
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Email already in use',
+                  );
+                }
+              } on InvalidEmailAuthException {
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Invalid Email',
+                  );
+                }
+              } on GenericAuthException {
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Failed to register',
+                  );
+                }
               }
-            } on EmailAlreadyInUseAuthException {
-              if (mounted) {
-                await showErrorDialog(
-                  context,
-                  'Email already in use',
-                );
-              }
-            } on InvalidEmailAuthException {
-              if (mounted) {
-                await showErrorDialog(
-                  context,
-                  'Invalid Email',
-                );
-              }
-            } on GenericAuthException {
-              if (mounted) {
-                await showErrorDialog(
-                  context,
-                  'Failed to register',
-                );
-              }
-            }
-            try {
-              model.FirebaseUser user = model.FirebaseUser(
-                  uid: FirebaseAuth.instance.currentUser!.uid,
-                  fullName: fullnamecapital,
-                  email: email,
-                  joinedDate: DateTime.now().toString(),
-                  dietaryPreferences: null);
+              try {
+                model.FirebaseUser user = model.FirebaseUser(
+                    uid: FirebaseAuth.instance.currentUser!.uid,
+                    fullName: fullnamecapital,
+                    email: email,
+                    joinedDate: DateTime.now().toString(),
+                    dietaryPreferences: null);
 
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .set(user.toJson());
-              if (mounted) {
-                Navigator.of(context).pushNamed(verifyEmailRoute);
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .set(user.toJson());
+                if (mounted) {
+                  Navigator.of(context).pushNamed(verifyEmailRoute);
+                }
+              } on GenericAuthException {
+                if (mounted) {
+                  await showErrorDialog(
+                    context,
+                    'Error while uploading data to Firestore',
+                  );
+                }
               }
-            } on GenericAuthException {
-              if (mounted) {
-                await showErrorDialog(
-                  context,
-                  'Error while uploading data to Firestore',
-                );
-              }
-            }
-          },
-          child: const Text('Register'),
+            },
+            child: const Center(
+              child: Text('Register',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
+            ),
+          ),
         ),
-        TextButton(
+        /* TextButton(
             onPressed: () {
               Navigator.of(context)
                   .pushNamedAndRemoveUntil(loginRoute, (route) => false);
             },
-            child: const Text('Already registered? Login Here!'))
+            child: const Text('Already registered? Login Here!')) */
       ],
     );
   }
@@ -331,14 +366,14 @@ class RegisterState extends StatelessWidget {
 class MyTextField extends StatelessWidget {
   const MyTextField(
       {super.key,
-      required this.loginorpassword,
+      required this.loginorpasswordorusername,
       required this.hintText,
       required this.obscureText,
       required this.enableSuggestion,
       required this.autocorrect,
       this.keyboardType});
 
-  final TextEditingController loginorpassword;
+  final TextEditingController loginorpasswordorusername;
   final String hintText;
   final bool obscureText;
   final bool enableSuggestion;
@@ -364,7 +399,7 @@ class MyTextField extends StatelessWidget {
           filled: true,
           hintStyle: TextStyle(color: Colors.grey[500]),
         ),
-        controller: loginorpassword,
+        controller: loginorpasswordorusername,
         enableSuggestions: enableSuggestion,
         autocorrect: autocorrect,
         keyboardType: keyboardType,
