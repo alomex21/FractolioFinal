@@ -193,7 +193,7 @@ class FullnameWidget extends StatelessWidget {
     if (userProvider.userName == null) {
       return const CircularProgressIndicator();
     } else {
-      return Text(userProvider.userName!);
+      return Text(userProvider.userName!.capitalize());
     }
   }
 }

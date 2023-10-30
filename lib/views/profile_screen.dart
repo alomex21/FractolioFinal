@@ -29,7 +29,12 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    const FullnameWidget(),
+                    const Row(
+                      children: [
+                        Text("Welcome, "),
+                        FullnameWidget(),
+                      ],
+                    ),
                     const EmailWidget(),
                     Center(
                       child: ElevatedButton(
