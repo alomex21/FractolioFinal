@@ -12,13 +12,16 @@ dependencies:
   connectivity_plus: ^5.0.1
   dependency_validator: ^3.2.3
   firebase_auth: ^4.11.1
+  firebase_auth_mocks: ^0.13.0
   firebase_core: ^2.11.0
   firebase_storage: ^11.2.6
   flutter:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
+  google_sign_in_mocks: ^0.3.0
   image_picker: ^1.0.4
   mobile_scanner: ^3.4.1
+  mockito: ^5.4.2
   permission_handler: ^11.0.1
   provider: ^6.0.5
   string_capitalize: ^0.0.10

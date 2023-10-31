@@ -167,7 +167,10 @@ class BuildProductDetail extends StatelessWidget {
                 } else {
                   final key2 = keysAndTitles[index - 1]['key'];
                   final title = keysAndTitles[index - 1]['title'];
-                  return BuildListTile(title: title!, value: data[key2!] ?? '');
+                  return BuildListTile(
+                    title: title!,
+                    value: data[key2!] ?? '',
+                  );
                 }
               },
             ),
@@ -213,7 +216,7 @@ class ImageBuilder extends StatelessWidget {
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 2.0),
-                      borderRadius: BorderRadius.circular(12.0)),
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Image.network(
                     fit: BoxFit.cover,
                     snapshot.data!,
@@ -241,6 +244,9 @@ class AllergensWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: InkWell(
+        onLongPress: () {
+          _copyToClipboard(context, allergens);
+        },
         child: ListTile(
           title: Text(title),
           subtitle: Column(
@@ -320,10 +326,14 @@ class BuildListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.value,
+    this.trail,
+    this.leading,
   });
 
   final String title;
   final String? value;
+  final Widget? trail;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -334,8 +344,10 @@ class BuildListTile extends StatelessWidget {
           _copyToClipboard(context, value);
         },
         child: ListTile(
+          leading: leading,
           title: Text(title),
           subtitle: Text(value ?? ""),
+          trailing: trail,
         ),
       ),
     );
@@ -361,7 +373,6 @@ void _copyToClipboard(BuildContext context, dynamic value) {
     );
   }
 }
-
 
 
 /*
