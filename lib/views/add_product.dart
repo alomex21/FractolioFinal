@@ -16,6 +16,8 @@ class ProductInfoForm extends StatefulWidget {
 
 class _ProductInfoFormState extends State<ProductInfoForm> {
   ImagePicker picker = ImagePicker();
+  bool _isimageselected = false;
+  double _iconsize = 50;
 
   final TextEditingController _allergenController = TextEditingController();
   final List<String> _allergens = [];
@@ -118,6 +120,13 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   final Map<String, String> _nutritionalValues = {};
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _qrCodeController = TextEditingController();
+
+  void _toggleImageSelection() {
+    setState(() {
+      _isimageselected = !_isimageselected;
+      _iconsize = _isimageselected ? 24 : 50;
+    });
+  }
 
   @override
   void dispose() {
@@ -266,8 +275,10 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: const Text('Add Product'),
+        backgroundColor: Colors.grey[300],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -280,19 +291,41 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 const Divider(),
-                IconButton(
-                    onPressed: (() => _pickImage()),
-                    icon: const Icon(Icons.add_a_photo_outlined)),
-                BuildTextField(
+                Column(
+                  children: [
+                    Center(
+                      child: _imageFile == null
+                          ? const Text(
+                              'No image selected, press Icon below to select from gallery',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            )
+                          : Image.file(_imageFile!),
+                    ),
+                    IconButton(
+                      iconSize: _iconsize,
+                      padding: const EdgeInsets.all(10),
+                      onPressed: (() {
+                        _pickImage();
+                        _toggleImageSelection();
+                      }),
+                      icon: const Icon(
+                        Icons.add_a_photo_outlined,
+                      ),
+                    ),
+                  ],
+                ),
+                /* BuildTextField(
                     controller: _imageURLController,
-                    hintText: 'Enter imageURL...'),
+                    hintText: 'Enter imageURL...'), */
                 BuildTextField(
                   controller: _productNameController,
                   hintText: 'Enter product name...',
                   textAlign: TextAlign.center,
                 ),
-                BuildTextField(
-                    controller: _qrCodeController, hintText: 'Enter QRCode'),
+                /* BuildTextField(
+                    controller: _qrCodeController, hintText: 'Enter QRCode'), */
                 BuildTextField(
                   controller: _descriptionController,
                   hintText: 'Enter description',
@@ -321,15 +354,16 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
                 _addNutritionalRow(),
                 const Divider(),
                 SubmitForm(
-                    formkey: _formkey,
-                    productNameController: _productNameController,
-                    descriptionController: _descriptionController,
-                    allergens: _allergens,
-                    nutritionalValues: _nutritionalValues,
-                    qrCodeController: _qrCodeController,
-                    imageURLController: _imageURLController,
-                    mounted: mounted,
-                    imageFile: _imageFile),
+                  formkey: _formkey,
+                  productNameController: _productNameController,
+                  descriptionController: _descriptionController,
+                  allergens: _allergens,
+                  nutritionalValues: _nutritionalValues,
+                  qrCodeController: _qrCodeController,
+                  imageURLController: _imageURLController,
+                  mounted: mounted,
+                  imageFile: _imageFile,
+                ),
               ],
             ),
           ),

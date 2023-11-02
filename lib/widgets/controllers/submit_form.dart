@@ -4,7 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:image/image.dart' as img;
 
 import '../../models/addproduct.dart' as product;
 
@@ -20,6 +24,7 @@ class SubmitForm extends StatefulWidget {
     required TextEditingController imageURLController,
     required this.mounted,
     required imageFile,
+    this.qrImageFile,
   })  : _formkey = formkey,
         _productNameController = productNameController,
         _descriptionController = descriptionController,
@@ -35,11 +40,12 @@ class SubmitForm extends StatefulWidget {
   final TextEditingController _descriptionController;
   final GlobalKey<FormState> _formkey;
   final File? _imageFile;
+
   final TextEditingController _imageURLController;
   final Map<String, String> _nutritionalValues;
   final TextEditingController _productNameController;
   final TextEditingController _qrCodeController;
-
+  final File? qrImageFile;
   @override
   State<SubmitForm> createState() => _SubmitFormState();
 }
@@ -54,6 +60,60 @@ class _SubmitFormState extends State<SubmitForm> {
     final UploadTask uploadTask = storageRef.putFile(widget._imageFile!);
     final TaskSnapshot downloadUrl = (await uploadTask);
     return await downloadUrl.ref.getDownloadURL();
+  }
+
+  Future<String> generateAndUploadQRCode(String content, String idref) async {
+    try {
+      // Generate the QR code
+      final qrValidationResult = QrValidator.validate(
+        data: content,
+        version: QrVersions.auto,
+        errorCorrectionLevel: QrErrorCorrectLevel.L,
+      );
+
+      if (qrValidationResult.status == QrValidationStatus.error) {
+        throw Exception(qrValidationResult.error);
+      }
+
+      final qrCode = qrValidationResult.qrCode;
+
+      // Convert to image
+      final painter = QrPainter.withQr(
+        qr: qrCode!,
+        gapless: false,
+        embeddedImageStyle: null,
+        embeddedImage: null,
+      );
+
+      final picData = await painter.toImageData(2048);
+      if (picData == null) {
+        throw Exception('Unable to convert QR code to image data.');
+      }
+
+      final bytes = picData.buffer.asUint8List();
+
+      // Save the QR code image as a file
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/$idref.png').create();
+      await file.writeAsBytes(bytes);
+
+      // Upload to Firebase Storage
+      final storageRef =
+          FirebaseStorage.instance.ref().child('qr_images/$idref.png');
+      await storageRef.putFile(file);
+
+      // Get the download URL
+      final qrImageURL = await storageRef.getDownloadURL();
+
+      // Delete the temporary file
+      await file.delete();
+
+      return qrImageURL;
+    } catch (e) {
+      // Handle exceptions
+      print(e);
+      rethrow;
+    }
   }
 
   @override
@@ -88,13 +148,17 @@ class _SubmitFormState extends State<SubmitForm> {
               await products.add(productfinal.toJson()).then(
                 (value) async {
                   String idref = value.id;
+                  final qrImageURL =
+                      await generateAndUploadQRCode(idref, idref);
                   String imageURL = await _uploadImage(idref);
+                  //print(qrUpload);
                   await products
                       .doc(idref)
                       .update(
                         {
                           "qr_code": idref,
                           "image_url": imageURL,
+                          "qr_code_image": qrImageURL,
                         },
                       )
                       .whenComplete(
