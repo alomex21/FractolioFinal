@@ -102,12 +102,12 @@ class _SubmitFormState extends State<SubmitForm> {
 
       // Save the QR code image as a file
       final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/$idref.png').create();
+      final file = await File('${tempDir.path}/$idref.jpeg').create();
       await file.writeAsBytes(bytes);
 
       // Upload to Firebase Storage
       final storageRef =
-          FirebaseStorage.instance.ref().child('qr_images/$idref.png');
+          FirebaseStorage.instance.ref().child('qr_images/$idref.jpeg');
       await storageRef.putFile(file);
 
       // Get the download URL
@@ -238,8 +238,10 @@ class _SubmitFormState extends State<SubmitForm> {
                         //_allergenController.clear();
                         //_nutritionalPropertyController.clear();
                         //_nutritionalValueController.clear();
-                        widget._nutritionalValues.clear();
-                        widget._allergens.clear();
+                        setState(() {
+                          widget._nutritionalValues.clear();
+                          widget._allergens.clear();
+                        });
                       });
                 },
                 onError: (e) => showErrorDialog(
