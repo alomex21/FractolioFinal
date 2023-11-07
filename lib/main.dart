@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/widgets/controllers/submitprovider.dart';
 import 'package:provider/provider.dart';
 import 'constant/routes.dart';
 import 'models/providers/user_provider.dart';
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => EmailProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SubmitProvider(),
         )
       ],
       child: MaterialApp(

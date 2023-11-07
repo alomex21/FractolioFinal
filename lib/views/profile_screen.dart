@@ -7,48 +7,42 @@ import 'package:fractoliotesting/widgets/widgets.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  void _didPushButton(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/navigator');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
+          const Center(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Card(
+                Card(
                   child: Card(
                     child: Icon(Icons.person),
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Text("Welcome, "),
                         FullnameWidget(),
                       ],
                     ),
-                    const EmailWidget(),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _didPushButton(context);
-                        },
-                        child: const Text('menu principal'),
-                      ),
-                    ),
+                    EmailWidget(),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 50),
           BotonPerfil(
             text: "Change Password",
             onTap: () {
@@ -57,7 +51,6 @@ class ProfileScreen extends StatelessWidget {
               //Navigator.pushNamed(context, '/change_password');
             },
           ),
-          const BotonPerfil(text: "Edit Profile"),
         ],
       ),
     );

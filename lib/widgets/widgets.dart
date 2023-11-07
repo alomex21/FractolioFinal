@@ -184,7 +184,14 @@ class LoginState extends StatelessWidget {
 }
 
 class FullnameWidget extends StatelessWidget {
-  const FullnameWidget({super.key});
+  const FullnameWidget({
+    super.key,
+    this.textSize = 16,
+    this.textColor = Colors.black,
+  });
+
+  final double textSize;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +200,13 @@ class FullnameWidget extends StatelessWidget {
     if (userProvider.userName == null) {
       return const CircularProgressIndicator();
     } else {
-      return Text(userProvider.userName!.capitalize());
+      return Text(
+        userProvider.userName!.capitalize(),
+        style: TextStyle(
+          color: textColor,
+          fontSize: textSize,
+        ),
+      );
     }
   }
 }

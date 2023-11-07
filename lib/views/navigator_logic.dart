@@ -64,6 +64,7 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
+        backgroundColor: Colors.grey[200],
         actions: [
           LogoutPopUpMenuButton(mounted: mounted)
           // IconButton(
@@ -74,15 +75,19 @@ class _MenuPrincipalState extends State<MenuPrincipal> {
       ),
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.lightBlueAccent,
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Colors.black),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
             label: 'Profile',
           ),
         ],

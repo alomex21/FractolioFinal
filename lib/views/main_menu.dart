@@ -38,24 +38,22 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /*           FutureBuilder<String?>(
-              future: _fullNameFuture,
-              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('Loading...');
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData && snapshot.data != null) {
-                  return Text('Welcome, ${snapshot.data}!');
-                } else {
-                  return const Text('Welcome!');
-                }
-              },
-            ), */
-            const FullnameWidget(),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Welcome, ',
+                  style: TextStyle(fontSize: 20),
+                ),
+                FullnameWidget(textSize: 20),
+              ],
+            ),
+            const SizedBox(height: 50),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -70,7 +68,7 @@ class MainMenu extends StatelessWidget {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const ProductInfoForm()));
               },
-              child: const Text('add product'),
+              child: const Text('Add Product to Database'),
             )
           ],
         ),
