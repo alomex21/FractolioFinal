@@ -1,37 +1,71 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fractoliotesting/services/auth/auth_exceptions.dart';
+import 'package:fractoliotesting/services/auth/auth_provider.dart';
 import 'package:fractoliotesting/services/auth/auth_service.dart';
-import 'package:fractoliotesting/views/forgot_password.dart';
 import 'package:mockito/mockito.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class MockAuthService extends Mock implements AuthService {}
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 void main() {
-  group('ForgotPasswordView', () {
-    late MockAuthService mockAuthService;
+  late MockFirebaseAuth mockFirebaseAuth;
+  late String testEmail;
 
-    setUp(() {
-      mockAuthService = MockAuthService();
-      //AuthService.setInstance(mockAuthService);
+  setUp(() {
+    mockFirebaseAuth = MockFirebaseAuth();
+    testEmail = 'testEmail@domain.com';
+  });
+
+  group('sendPasswordReset', () {
+    test('succeeds when FirebaseAuth is called with correct email', () async {
+      when(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .thenAnswer((_) => Future.value());
+      await AuthService(mockFirebaseAuth as AuthProvider)
+          .sendPasswordReset(testEmail);
+      verify(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .called(1);
+      verifyNoMoreInteractions(mockFirebaseAuth);
     });
 
-    testWidgets('should show snackbar on button press',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: ForgotPasswordView()));
-
-      final emailField = find.byType(TextField);
-      expect(emailField, findsOneWidget);
-
-      await tester.enterText(emailField, 'test@example.com');
-      await tester.tap(find.text('Send me a password reset link'));
-      await tester.pumpAndSettle();
-
-      verify(mockAuthService.sendPasswordReset('test@example.com')).called(1);
-
-      final snackbar = find.byType(SnackBar);
-      expect(snackbar, findsOneWidget);
+    test(
+        'throws InvalidEmailAuthException when FirebaseAuth returns invalid-email error',
+        () async {
+      when(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
       expect(
-          find.text('Successfully Sent password reset link!'), findsOneWidget);
+          () async => await AuthService(mockFirebaseAuth as AuthProvider)
+              .sendPasswordReset(testEmail),
+          throwsA(isA<InvalidEmailAuthException>()));
+    });
+
+    test(
+        'throws UserNotFoundAuthException when FirebaseAuth returns user-not-found error',
+        () async {
+      when(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .thenThrow(FirebaseAuthException(code: 'user-not-found'));
+      expect(
+          () async => await AuthService(mockFirebaseAuth as AuthProvider)
+              .sendPasswordReset(testEmail),
+          throwsA(isA<UserNotFoundAuthException>()));
+    });
+
+    test('throws GenericAuthException on FirebaseAuth other error codes',
+        () async {
+      when(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .thenThrow(FirebaseAuthException(code: 'other-error-code'));
+      expect(
+          () async => await AuthService(mockFirebaseAuth as AuthProvider)
+              .sendPasswordReset(testEmail),
+          throwsA(isA<GenericAuthException>()));
+    });
+
+    test('throws GenericAuthException on any other exceptions', () async {
+      when(mockFirebaseAuth.sendPasswordResetEmail(email: testEmail))
+          .thenThrow(Exception());
+      expect(
+          () async => await AuthService(mockFirebaseAuth as AuthProvider)
+              .sendPasswordReset(testEmail),
+          throwsA(isA<GenericAuthException>()));
     });
   });
 }

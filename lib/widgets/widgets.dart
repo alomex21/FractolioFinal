@@ -376,7 +376,7 @@ class RegisterState extends StatelessWidget {
   }
 }
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
   const MyTextField(
       {super.key,
       required this.loginorpasswordorusername,
@@ -394,12 +394,30 @@ class MyTextField extends StatelessWidget {
   final TextInputType? keyboardType;
 
   @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+  late bool _isObscure;
+  @override
+  void initState() {
+    super.initState();
+    _isObscure = widget.obscureText;
+  }
+
+  void _toggleObscure() {
+    setState(() {
+      _isObscure = !_isObscure;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
         decoration: InputDecoration(
-          hintText: hintText,
+          hintText: widget.hintText,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.white,
@@ -411,11 +429,20 @@ class MyTextField extends StatelessWidget {
           fillColor: Colors.grey.shade200,
           filled: true,
           hintStyle: TextStyle(color: Colors.grey[500]),
+          suffixIcon: widget.obscureText
+              ? IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: _toggleObscure,
+                )
+              : null,
         ),
-        controller: loginorpasswordorusername,
-        enableSuggestions: enableSuggestion,
-        autocorrect: autocorrect,
-        keyboardType: keyboardType,
+        controller: widget.loginorpasswordorusername,
+        enableSuggestions: widget.enableSuggestion,
+        autocorrect: widget.autocorrect,
+        keyboardType: widget.keyboardType,
+        obscureText: _isObscure,
       ),
     );
   }
