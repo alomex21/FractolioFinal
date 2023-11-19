@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/views/navigator_logic.dart';
 import 'package:string_capitalize/string_capitalize.dart';
 import '../services/services/firestore_service.dart';
 import 'product_review.dart';
@@ -77,7 +78,31 @@ class ProductsDetail extends StatelessWidget {
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Text('Product not found!');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Assuming this is nested within the main menu
+            while (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Product not found!'),
+                  content: const Text('The product is not found, try again.'),
+                  actions: [
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          });
+          // Return an empty container or appropriate widget while navigation and alert takes place
+          return Container();
         }
 
         final Map<String, dynamic> data =

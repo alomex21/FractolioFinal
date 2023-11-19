@@ -80,7 +80,7 @@ class _CameraControllerQRState extends State<CameraControllerQR> {
                     barcodes.isNotEmpty ? barcodes[0].rawValue : null;
                 debugPrint('Value of qr is: $qrcode');
                 cameraController.stop();
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ProductsDetail(
                         productId: qrcode,
