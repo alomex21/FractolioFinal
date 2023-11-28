@@ -1,3 +1,13 @@
+plugins {
+    id 'com.android.application'
+
+  // Add the Google services Gradle plugin
+
+    id 'com.google.gms.google-services'
+
+}
+
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -24,6 +34,7 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion flutter.compileSdkVersion
@@ -69,5 +80,10 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0"
+    implementation platform('com.google.firebase:firebase-bom:32.6.0')
+    implementation "com.google.firebase:firebase-auth"
+    implementation "com.google.firebase:firebase-storage"
+    implementation "com.google.firebase:firebase-firestore"
+
 
 }
