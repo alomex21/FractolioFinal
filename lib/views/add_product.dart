@@ -263,7 +263,10 @@ class _ProductInfoFormState extends State<ProductInfoForm> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+    );
     //print('${pickedFile?.path}');
     setState(() {
       if (pickedFile != null) {

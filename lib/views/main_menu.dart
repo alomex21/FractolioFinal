@@ -65,7 +65,7 @@ class MainMenu extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ProductsDetail(
-                          productId: 'UqkWbaqGz02xKU4KYpPU',
+                          productId: 'fimqsRGRHvCteRpISHye',
                           firebaseService: FirebaseService.instance,
                         )));
               },

@@ -18,7 +18,7 @@ class FirebaseService implements FirebaseServiceInterface {
   Future<String> getImageUrl(String productName) async {
     final Reference ref =
         //_firebaseInstance.ref('ProductImage/$productName.jpeg');
-        _firebaseInstance.ref('ProductImage/$productName');
+        _firebaseInstance.ref('ProductImages/$productName');
     //print(ref);
     String url = await ref.getDownloadURL();
     return url;
