@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fractoliotesting/dialogs/error_dialog.dart';
+import 'package:fractoliotesting/views/add_product.dart';
 import 'package:fractoliotesting/widgets/controllers/submitprovider.dart';
 
 import 'package:provider/provider.dart';
@@ -48,6 +49,16 @@ class SubmitForm extends StatefulWidget {
 }
 
 class _SubmitFormState extends State<SubmitForm> {
+  void reloadEntireView() {
+    Navigator.of(context).pop(); // Pop the current view
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) =>
+            const ProductInfoForm(), // Replace YourWidget with the actual widget you want to reload
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -172,19 +183,23 @@ class _SubmitFormState extends State<SubmitForm> {
                           ),
                         ),
                       )
-                      .then((value) {
-                        // Clear the fields
-                        widget._productNameController.clear();
-                        widget._qrCodeController.clear();
-                        widget._descriptionController.clear();
-                        widget._imageURLController.clear();
-                        //_allergenController.clear();
-                        //_nutritionalPropertyController.clear();
-                        //_nutritionalValueController.clear();
-                        widget._nutritionalValues.clear();
-                        widget._allergens.clear();
-                      });
-                  setState(() {});
+                      .then(
+                        (value) {
+                          Future.delayed(
+                            const Duration(milliseconds: 1500),
+                            () {
+                              widget._productNameController.clear();
+                              widget._qrCodeController.clear();
+                              widget._descriptionController.clear();
+                              widget._imageURLController.clear();
+                              widget._nutritionalValues.clear();
+                              widget._allergens.clear();
+                              reloadEntireView();
+                            },
+                          );
+                          // Clear the fields
+                        },
+                      );
                 },
                 onError: (e) => showErrorDialog(
                     context, 'Failed with error "${e.code}": "${e.message}"'),
