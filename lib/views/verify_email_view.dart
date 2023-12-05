@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fractoliotesting/services/auth/auth_service.dart';
 import 'package:timer_button/timer_button.dart';
 import '../constant/routes.dart';
 
@@ -49,8 +50,8 @@ class VerifyEmailView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0)),
                     child: TextButton(
                       onPressed: () async {
-                        //TODO:AWAIT APAGADO
-                        //await AuthService.firebase().sendEmailVerification();
+                        //TODO:AWAIT encendido
+                        await AuthService.firebase().sendEmailVerification();
                       },
                       child: TimerButton(
                         buttonType: ButtonType.textButton,
@@ -78,8 +79,8 @@ class VerifyEmailView extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () async {
-                      //TODO AWAIT APAGADO
-                      //await AuthService.firebase().logOut();
+                      //TODO AWAIT encendido
+                      await AuthService.firebase().logOut();
                       if (context.mounted) {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           registerRoute2,

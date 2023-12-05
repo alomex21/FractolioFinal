@@ -416,6 +416,7 @@ class _MyTextFieldState extends State<MyTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           hintText: widget.hintText,
           enabledBorder: const OutlineInputBorder(
