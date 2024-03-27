@@ -9,7 +9,7 @@ Dentro de esta aplicacion, puede ver informacion tal como:
 - Descripcion del producto
 - Informacion Nutricional
 - Alergenos
-- entre otros
+- Entre otros!
 
 ## Build
 
